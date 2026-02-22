@@ -1,11 +1,15 @@
 import * as THREE from 'three';
 
 export function setupLighting(scene) {
-  scene.add(new THREE.AmbientLight(0x101520, 0.25));
-  scene.add(new THREE.HemisphereLight(0x1a2030, 0x080810, 0.2));
+  scene.add(new THREE.AmbientLight(0x141820, 0.3));
+  scene.add(new THREE.HemisphereLight(0x1e2530, 0x0c0a08, 0.22));
 
   const heroX = 12;
   const heroZ = -15;
+
+  const rooftopWarm = new THREE.PointLight(0xffaa66, 0.25, 15, 2);
+  rooftopWarm.position.set(-2, 2, 2);
+  scene.add(rooftopWarm);
 
   const basePink = new THREE.PointLight(0xff0066, 1.8, 40, 1);
   basePink.position.set(heroX, -15, heroZ);

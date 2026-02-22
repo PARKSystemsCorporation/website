@@ -138,11 +138,11 @@ html, body {
   align-items: center;
   justify-content: center;
   z-index: 100;
-  transition: opacity 2s ease;
+  transition: opacity 2.5s ease;
   font-family: 'Orbitron', sans-serif;
-  color: rgba(255, 107, 0, 0.6);
-  font-size: 0.9rem;
-  letter-spacing: 0.35em;
+  color: rgba(255, 140, 60, 0.4);
+  font-size: 1rem;
+  letter-spacing: 0.5em;
 }
 
 .loading.fade-out {
