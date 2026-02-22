@@ -274,25 +274,30 @@ export function createPlatform(scene) {
     metalness: 0.0,
   });
 
-  const hillGeo = new THREE.SphereGeometry(14, 32, 20, 0, Math.PI * 2, 0, Math.PI / 2);
+  // Main mound — sits just under the deck, extends downward
+  const hillGeo = new THREE.SphereGeometry(7, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2);
   const hill = new THREE.Mesh(hillGeo, hillMat);
-  hill.position.set(0, -0.15, 0);
-  hill.scale.set(1.2, 0.6, 1.0);
+  hill.position.set(0, -0.3, 0);
+  hill.scale.set(1.3, 0.5, 1.1);
+  hill.rotation.x = Math.PI; // Flip upside down so dome goes downward
   group.add(hill);
 
-  const hill2Geo = new THREE.SphereGeometry(8, 20, 14, 0, Math.PI * 2, 0, Math.PI / 2);
+  // Secondary mound — slightly offset, also pointing down
+  const hill2Geo = new THREE.SphereGeometry(4, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2);
   const hill2Mat = hillMat.clone();
   hill2Mat.color = new THREE.Color(0x152210);
   const hill2 = new THREE.Mesh(hill2Geo, hill2Mat);
-  hill2.position.set(-5, -0.15, 3);
-  hill2.scale.set(1.0, 0.5, 0.8);
+  hill2.position.set(-4, -0.3, 2);
+  hill2.scale.set(1.0, 0.6, 0.9);
+  hill2.rotation.x = Math.PI;
   group.add(hill2);
 
   const hill3Mat = hillMat.clone();
   hill3Mat.color = new THREE.Color(0x1d2e18);
   const hill3 = new THREE.Mesh(hill2Geo, hill3Mat);
-  hill3.position.set(4, -0.15, -2);
-  hill3.scale.set(0.8, 0.45, 0.9);
+  hill3.position.set(3, -0.3, -1.5);
+  hill3.scale.set(0.9, 0.5, 0.8);
+  hill3.rotation.x = Math.PI;
   group.add(hill3);
 
   scene.add(group);
