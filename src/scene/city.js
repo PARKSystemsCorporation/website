@@ -1,38 +1,40 @@
 import * as THREE from 'three';
 
 function createWindowTexture() {
+  const W = 512;
+  const H = 1024;
   const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 2048;
+  canvas.width = W;
+  canvas.height = H;
   const ctx = canvas.getContext('2d');
 
   ctx.fillStyle = '#050510';
-  ctx.fillRect(0, 0, 1024, 2048);
+  ctx.fillRect(0, 0, W, H);
 
   // Subtle vertical panel lines
   ctx.strokeStyle = 'rgba(20, 20, 40, 0.3)';
   ctx.lineWidth = 1;
-  for (let x = 0; x < 1024; x += 64) {
+  for (let x = 0; x < W; x += 32) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
-    ctx.lineTo(x, 2048);
+    ctx.lineTo(x, H);
     ctx.stroke();
   }
 
   // Horizontal floor lines
-  for (let y = 0; y < 2048; y += 48) {
+  for (let y = 0; y < H; y += 24) {
     ctx.beginPath();
     ctx.moveTo(0, y);
-    ctx.lineTo(1024, y);
+    ctx.lineTo(W, y);
     ctx.stroke();
   }
 
-  const cols = 30;
-  const rows = 120;
-  const ww = 18;
-  const wh = 10;
-  const gapX = (1024 - cols * ww) / (cols + 1);
-  const gapY = (2048 - rows * wh) / (rows + 1);
+  const cols = 20;
+  const rows = 80;
+  const ww = 12;
+  const wh = 6;
+  const gapX = (W - cols * ww) / (cols + 1);
+  const gapY = (H - rows * wh) / (rows + 1);
 
   const warm = ['#ffcc66', '#ffaa44', '#ffdd88', '#ff9933', '#ffe8a0', '#ffbb55', '#ffd070'];
   const cool = ['#44aaff', '#00ccff', '#22ddcc', '#6688ff', '#00aaee', '#3366cc', '#5599ff', '#00bbdd', '#4477ee'];
@@ -54,25 +56,22 @@ function createWindowTexture() {
 
         const baseColor = palette[Math.floor(Math.random() * palette.length)];
 
-        // Window glow halo
         if (Math.random() < 0.3) {
           ctx.globalAlpha = 0.06 + Math.random() * 0.08;
           ctx.fillStyle = baseColor;
-          ctx.fillRect(wx - 3, wy - 2, ww + 6, wh + 4);
+          ctx.fillRect(wx - 2, wy - 1, ww + 4, wh + 2);
         }
 
         ctx.globalAlpha = 0.4 + Math.random() * 0.6;
         ctx.fillStyle = baseColor;
         ctx.fillRect(wx, wy, ww, wh);
 
-        // Inner bright core
         if (Math.random() < 0.4) {
           ctx.globalAlpha = 0.2 + Math.random() * 0.3;
           ctx.fillStyle = '#ffffff';
-          ctx.fillRect(wx + 2, wy + 1, ww - 4, wh - 2);
+          ctx.fillRect(wx + 1, wy + 1, ww - 2, wh - 2);
         }
       } else {
-        // Dark window with faint outline
         ctx.globalAlpha = 0.08;
         ctx.fillStyle = '#1a1a3a';
         ctx.fillRect(wx, wy, ww, wh);
@@ -80,12 +79,12 @@ function createWindowTexture() {
     }
   }
 
-  // Scattered bright accent patches (neon reflections on glass)
-  for (let i = 0; i < 40; i++) {
-    const px = Math.random() * 1024;
-    const py = Math.random() * 2048;
-    const pw = 20 + Math.random() * 40;
-    const ph = 6 + Math.random() * 12;
+  // Neon reflection patches on building glass
+  for (let i = 0; i < 30; i++) {
+    const px = Math.random() * W;
+    const py = Math.random() * H;
+    const pw = 10 + Math.random() * 20;
+    const ph = 3 + Math.random() * 6;
     const neonColors = ['#00ffff', '#ff00ff', '#00ff88', '#ff3366', '#ffaa00', '#4488ff'];
     ctx.globalAlpha = 0.08 + Math.random() * 0.12;
     ctx.fillStyle = neonColors[Math.floor(Math.random() * neonColors.length)];
@@ -110,7 +109,7 @@ export function createCity(scene) {
     color: 0x0a0a18,
     emissiveMap: windowTex,
     emissive: new THREE.Color(1, 1, 1),
-    emissiveIntensity: 2.0,
+    emissiveIntensity: 2.5,
     roughness: 0.85,
     metalness: 0.25,
   });
