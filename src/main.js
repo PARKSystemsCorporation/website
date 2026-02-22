@@ -32,11 +32,11 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.7;
+renderer.toneMappingExposure = 0.8;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-const { group: cityGroup, flickerStrips } = createCity(scene);
+const { group: cityGroup, flickerBoards } = createCity(scene);
 
 // Parent group for cabin compound — rotate 90deg without moving camera
 const cabinPivot = new THREE.Group();
@@ -109,7 +109,7 @@ function animate() {
 
   rainUpdate(delta, elapsed);
   updateVegetation(elapsed);
-  updateNeonFlicker(flickerStrips, elapsed);
+  updateNeonFlicker(flickerBoards, elapsed);
   updateStringLights(elapsed);
   effects.update(elapsed, delta);
 

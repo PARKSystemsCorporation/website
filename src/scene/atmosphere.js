@@ -33,8 +33,8 @@ const VignetteShader = {
 };
 
 export function setupAtmosphere(scene, camera, renderer) {
-  scene.fog = new THREE.FogExp2(0x050515, 0.006);
-  scene.background = new THREE.Color(0x050515);
+  scene.fog = new THREE.FogExp2(0x040410, 0.007);
+  scene.background = new THREE.Color(0x040410);
 
   const rainCount = 3000;
   const positions = new Float32Array(rainCount * 3);
@@ -74,9 +74,9 @@ export function setupAtmosphere(scene, camera, renderer) {
       Math.floor(window.innerWidth / 2),
       Math.floor(window.innerHeight / 2)
     ),
-    1.0,
-    0.5,
-    0.65
+    0.9,
+    0.6,
+    0.55
   );
   composer.addPass(bloomPass);
 

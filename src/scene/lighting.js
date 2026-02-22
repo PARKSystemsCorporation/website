@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 
 export function setupLighting(scene, cabinPivot) {
-  scene.add(new THREE.AmbientLight(0x060612, 0.15));
-  scene.add(new THREE.HemisphereLight(0x080818, 0x080400, 0.15));
+  scene.add(new THREE.AmbientLight(0x060612, 0.12));
+  scene.add(new THREE.HemisphereLight(0x080818, 0x060400, 0.12));
 
-  // --- CABIN SANCTUARY (subtle warm glow) ---
+  // --- CABIN SANCTUARY ---
   const trailerMain = new THREE.PointLight(0xff8844, 1.5, 14, 1.5);
   trailerMain.position.set(2.5, 2.5, -1.5);
   cabinPivot.add(trailerMain);
@@ -21,14 +21,15 @@ export function setupLighting(scene, cabinPivot) {
   cabinCeiling.position.set(2, 3.5, -1);
   cabinPivot.add(cabinCeiling);
 
-  // --- CITY (very subtle) ---
-  const cityDir = new THREE.DirectionalLight(0x1a2266, 0.3);
-  cityDir.position.set(-10, 15, -50);
-  cityDir.target.position.set(-20, 0, -40);
-  scene.add(cityDir);
-  scene.add(cityDir.target);
+  // --- MOONLIGHT (backlit silhouette from behind city) ---
+  const moon = new THREE.DirectionalLight(0x1a2255, 0.4);
+  moon.position.set(-20, 30, -80);
+  moon.target.position.set(0, 0, 0);
+  scene.add(moon);
+  scene.add(moon.target);
 
-  const rim = new THREE.DirectionalLight(0x00aacc, 0.15);
-  rim.position.set(-15, 10, -25);
+  // Subtle cool rim from the side
+  const rim = new THREE.DirectionalLight(0x0a1533, 0.2);
+  rim.position.set(20, 15, -40);
   scene.add(rim);
 }
