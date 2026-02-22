@@ -14,9 +14,8 @@ export function createOverlay() {
          target="_blank" rel="noopener noreferrer">
         KIRA 5.0
       </a>
-      <a href="https://parksystemscorporation.com/research"
-         class="nav-link nav-link--research"
-         target="_blank" rel="noopener noreferrer">
+      <a href="/research/"
+         class="nav-link nav-link--research">
         Research
       </a>
     </nav>
