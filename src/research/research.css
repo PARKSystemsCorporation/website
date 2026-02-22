@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,18 +7,23 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: #080808;
-  color: #b0b0b0;
-  font-family: 'Rajdhani', sans-serif;
+  background: #0a0a0a;
+  color: #a0a0a0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-weight: 400;
   line-height: 1.7;
   min-height: 100vh;
+}
+
+::selection {
+  background: rgba(232, 106, 0, 0.2);
+  color: #fff;
 }
 
 a {
@@ -27,56 +34,80 @@ a {
 /* ---- Layout ---- */
 
 .r-wrapper {
-  max-width: 720px;
+  max-width: 700px;
   margin: 0 auto;
-  padding: 3rem 2rem 6rem;
+  padding: 4rem 2rem 6rem;
 }
 
 /* ---- Header ---- */
 
 .r-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  padding-bottom: 2.5rem;
-  border-bottom: 1px solid #151515;
   margin-bottom: 3rem;
 }
 
 .r-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.25em;
-  color: #555;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #e86a00;
   text-transform: uppercase;
 }
 
 .r-home {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   color: #333;
   text-transform: uppercase;
   transition: color 0.2s;
 }
 
 .r-home:hover {
-  color: #888;
+  color: #666;
 }
 
-/* ---- Feed (listing) ---- */
+/* ---- Stats ---- */
+
+.r-stats {
+  display: flex;
+  gap: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid #161616;
+  margin-bottom: 2.5rem;
+}
+
+.r-stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #ddd;
+}
+
+.r-stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: #2a2a2a;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+/* ---- Feed ---- */
 
 .r-feed {
   list-style: none;
 }
 
 .r-item {
-  padding: 1.8rem 0;
-  border-bottom: 1px solid #111;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid #131313;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.3s;
 }
 
 .r-item:first-child {
@@ -84,74 +115,75 @@ a {
 }
 
 .r-item:hover {
-  border-color: #1a1a1a;
+  border-color: #1e1e1e;
 }
 
 .r-item:hover .r-item-title {
-  color: #e0e0e0;
+  color: #fff;
 }
 
 .r-meta {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
 }
 
 .r-type {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   color: #e86a00;
   text-transform: uppercase;
-  opacity: 0.7;
 }
 
 .r-date {
-  font-size: 0.8rem;
-  color: #383838;
-  letter-spacing: 0.04em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #2a2a2a;
 }
 
 .r-item-title {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  color: #c8c8c8;
-  line-height: 1.35;
+  color: #ccc;
+  line-height: 1.4;
   transition: color 0.2s;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .r-summary {
-  font-size: 0.88rem;
-  color: #555;
-  line-height: 1.6;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: #484848;
+  line-height: 1.65;
 }
 
 .r-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.7rem;
+  gap: 0.55rem;
+  margin-top: 0.65rem;
 }
 
 .r-tag {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: #2a2a2a;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #222;
   text-transform: uppercase;
 }
 
-/* ---- Article (detail) ---- */
+/* ---- Article detail ---- */
 
 .r-back {
   display: inline-block;
-  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   color: #333;
   text-transform: uppercase;
   margin-bottom: 2.5rem;
@@ -159,105 +191,85 @@ a {
 }
 
 .r-back:hover {
-  color: #888;
+  color: #666;
 }
 
 .r-article-meta {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
 }
 
 .r-article-title {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   font-weight: 700;
-  color: #e0e0e0;
+  color: #e8e8e8;
   line-height: 1.3;
-  margin-bottom: 0.6rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.7rem;
 }
 
 .r-article-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.55rem;
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid #111;
+  border-bottom: 1px solid #131313;
 }
 
 .r-article-tag {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: #2a2a2a;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #222;
   text-transform: uppercase;
 }
 
 .r-body {
-  font-size: 0.95rem;
-  line-height: 1.8;
-  color: #999;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.85;
+  color: #888;
 }
 
 .r-body p {
-  margin-bottom: 1.3rem;
+  margin-bottom: 1.2rem;
 }
 
 .r-body h3 {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 1rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: #b0b0b0;
-  letter-spacing: 0.02em;
-  margin-top: 2rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #555;
+  margin-top: 2.2rem;
   margin-bottom: 0.6rem;
 }
 
 .r-body p:first-child {
-  font-size: 1rem;
   color: #aaa;
-}
-
-/* ---- Sidebar stats ---- */
-
-.r-stats {
-  display: flex;
-  gap: 2.5rem;
-  padding-bottom: 2.5rem;
-  border-bottom: 1px solid #111;
-  margin-bottom: 2.5rem;
-}
-
-.r-stat-val {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #c8c8c8;
-}
-
-.r-stat-label {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: #333;
-  text-transform: uppercase;
-  margin-top: 0.15rem;
+  font-weight: 400;
 }
 
 /* ---- Responsive ---- */
 
 @media (max-width: 600px) {
   .r-wrapper {
-    padding: 2rem 1.25rem 4rem;
+    padding: 2.5rem 1.25rem 4rem;
   }
 
   .r-article-title {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .r-stats {
-    gap: 1.5rem;
+    gap: 2rem;
+  }
+
+  .r-stat-val {
+    font-size: 1.1rem;
   }
 }
