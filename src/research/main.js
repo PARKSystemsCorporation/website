@@ -3,53 +3,82 @@ import './research.css';
 
 const app = document.getElementById('app');
 
-function formatDate(iso) {
-  const d = new Date(iso + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+function fmtDate(iso) {
+  return iso.replace(/-/g, '.');
+}
+
+function systemsUsed() {
+  const s = new Set();
+  articles.forEach(a => a.tags.forEach(t => s.add(t)));
+  return s.size;
 }
 
 function renderFeed() {
   app.innerHTML = `
-    <div class="r-wrapper">
-      <header class="r-header">
-        <span class="r-title">Research</span>
-        <a href="/" class="r-home">Home</a>
-      </header>
+    <div class="hud">
+      <nav class="topbar">
+        <div class="topbar-left">
+          <span class="sys-dot"></span>
+          <span class="sys-label">SYS ONLINE</span>
+          <span class="topbar-sep"></span>
+          <span class="topbar-title">RESEARCH DIVISION</span>
+        </div>
+        <a href="/" class="topbar-link">HOME</a>
+      </nav>
 
-      <div class="r-stats">
-        <div>
-          <div class="r-stat-val">${articles.length}</div>
-          <div class="r-stat-label">Publications</div>
+      <div class="hero">
+        <div class="hero-label">PARK SYSTEMS CORPORATION</div>
+        <h1 class="hero-title">Research Hub</h1>
+        <p class="hero-desc">Published findings, specifications, and technical reports.</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-block">
+          <div class="stat-num">${articles.length}</div>
+          <div class="stat-label">PUBLICATIONS</div>
         </div>
-        <div>
-          <div class="r-stat-val">${articles.filter(a => a.type === 'SPEC').length}</div>
-          <div class="r-stat-label">Specifications</div>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">${systemsUsed()}</div>
+          <div class="stat-label">TAGS INDEXED</div>
         </div>
-        <div>
-          <div class="r-stat-val">${articles.filter(a => a.type === 'REPORT').length}</div>
-          <div class="r-stat-label">Reports</div>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">${articles.filter(a => a.type === 'SPEC').length}</div>
+          <div class="stat-label">SPECIFICATIONS</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-block">
+          <div class="stat-num">${articles.filter(a => a.type === 'REPORT').length}</div>
+          <div class="stat-label">REPORTS</div>
         </div>
       </div>
 
-      <ul class="r-feed">
+      <div class="feed-header">
+        <span class="feed-label">LATEST PUBLICATIONS</span>
+        <span class="feed-count">${articles.length} entries</span>
+      </div>
+
+      <div class="feed">
         ${articles.map(a => `
-          <li class="r-item" data-slug="${a.slug}">
-            <div class="r-meta">
-              <span class="r-type">${a.type}</span>
-              <span class="r-date">${formatDate(a.date)}</span>
+          <article class="card" data-slug="${a.slug}">
+            <div class="card-top">
+              <span class="card-type card-type--${a.type.toLowerCase()}">${a.type}</span>
+              <span class="card-date">${fmtDate(a.date)}</span>
             </div>
-            <div class="r-item-title">${a.title}</div>
-            <div class="r-summary">${a.summary}</div>
-            <div class="r-tags">
-              ${a.tags.map(t => `<span class="r-tag">${t}</span>`).join('')}
+            <h2 class="card-title">${a.title}</h2>
+            <p class="card-summary">${a.summary}</p>
+            <div class="card-tags">
+              ${a.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
             </div>
-          </li>
+            <div class="card-action">READ &rarr;</div>
+          </article>
         `).join('')}
-      </ul>
+      </div>
     </div>
   `;
 
-  app.querySelectorAll('.r-item').forEach(el => {
+  app.querySelectorAll('.card').forEach(el => {
     el.addEventListener('click', () => {
       window.location.hash = el.dataset.slug;
     });
@@ -61,23 +90,32 @@ function renderArticle(slug) {
   if (!a) { renderFeed(); return; }
 
   app.innerHTML = `
-    <div class="r-wrapper">
-      <header class="r-header">
-        <span class="r-title">Research</span>
-        <a href="/" class="r-home">Home</a>
-      </header>
+    <div class="hud">
+      <nav class="topbar">
+        <div class="topbar-left">
+          <span class="sys-dot"></span>
+          <span class="sys-label">SYS ONLINE</span>
+          <span class="topbar-sep"></span>
+          <span class="topbar-title">RESEARCH DIVISION</span>
+        </div>
+        <a href="/" class="topbar-link">HOME</a>
+      </nav>
 
-      <a href="#" class="r-back">&larr; Back</a>
+      <a href="#" class="back-link">&larr; ALL PUBLICATIONS</a>
 
-      <div class="r-article-meta">
-        <span class="r-type">${a.type}</span>
-        <span class="r-date">${formatDate(a.date)}</span>
+      <div class="doc">
+        <div class="doc-header">
+          <div class="doc-meta">
+            <span class="card-type card-type--${a.type.toLowerCase()}">${a.type}</span>
+            <span class="card-date">${fmtDate(a.date)}</span>
+          </div>
+          <h1 class="doc-title">${a.title}</h1>
+          <div class="doc-tags">
+            ${a.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
+          </div>
+        </div>
+        <div class="doc-body">${a.content}</div>
       </div>
-      <h1 class="r-article-title">${a.title}</h1>
-      <div class="r-article-tags">
-        ${a.tags.map(t => `<span class="r-article-tag">${t}</span>`).join('')}
-      </div>
-      <div class="r-body">${a.content}</div>
     </div>
   `;
 
@@ -86,11 +124,8 @@ function renderArticle(slug) {
 
 function route() {
   const hash = window.location.hash.slice(1);
-  if (hash) {
-    renderArticle(hash);
-  } else {
-    renderFeed();
-  }
+  if (hash) renderArticle(hash);
+  else renderFeed();
 }
 
 window.addEventListener('hashchange', route);
