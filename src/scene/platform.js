@@ -90,8 +90,7 @@ function createHillTexture() {
   ctx.fillStyle = '#1a2a12';
   ctx.fillRect(0, 0, 512, 512);
 
-  // Grass-like strokes
-  for (let i = 0; i < 2000; i++) {
+  for (let i = 0; i < 800; i++) {
     const x = Math.random() * 512;
     const y = Math.random() * 512;
     const len = 3 + Math.random() * 8;

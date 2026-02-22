@@ -36,7 +36,7 @@ export function setupAtmosphere(scene, camera, renderer) {
   scene.fog = new THREE.FogExp2(0x040410, 0.007);
   scene.background = new THREE.Color(0x040410);
 
-  const rainCount = 3000;
+  const rainCount = 1200;
   const positions = new Float32Array(rainCount * 3);
   const velocities = new Float32Array(rainCount);
 

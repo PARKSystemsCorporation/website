@@ -1,31 +1,29 @@
 import * as THREE from 'three';
 
 function createTrailerTexture() {
+  const W = 512, H = 256;
   const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 512;
+  canvas.width = W;
+  canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  // Base metal with warm tint
-  const baseGrad = ctx.createLinearGradient(0, 0, 0, 512);
+  const baseGrad = ctx.createLinearGradient(0, 0, 0, H);
   baseGrad.addColorStop(0, '#9a8e78');
   baseGrad.addColorStop(0.3, '#8a7e6a');
   baseGrad.addColorStop(0.7, '#7a6e5a');
   baseGrad.addColorStop(1, '#6a5e4a');
   ctx.fillStyle = baseGrad;
-  ctx.fillRect(0, 0, 1024, 512);
+  ctx.fillRect(0, 0, W, H);
 
-  // Metal panel texture noise
-  for (let i = 0; i < 3000; i++) {
+  for (let i = 0; i < 1200; i++) {
     ctx.globalAlpha = 0.02 + Math.random() * 0.04;
     ctx.fillStyle = Math.random() > 0.5 ? '#554530' : '#baa888';
-    ctx.fillRect(Math.random() * 1024, Math.random() * 512, 1 + Math.random() * 3, 1 + Math.random() * 3);
+    ctx.fillRect(Math.random() * W, Math.random() * H, 1 + Math.random() * 2, 1 + Math.random() * 2);
   }
 
-  // Weathering patches
-  for (let i = 0; i < 80; i++) {
-    const x = Math.random() * 1024;
-    const y = Math.random() * 512;
+  for (let i = 0; i < 40; i++) {
+    const x = Math.random() * W;
+    const y = Math.random() * H;
     const r = 5 + Math.random() * 35;
     ctx.globalAlpha = 0.06 + Math.random() * 0.12;
     ctx.fillStyle = ['#6a5a3a', '#4a3a2a', '#8a7a5a', '#5a4a2a'][Math.floor(Math.random() * 4)];
@@ -34,46 +32,42 @@ function createTrailerTexture() {
     ctx.fill();
   }
 
-  // Rust streaks
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 20; i++) {
     ctx.globalAlpha = 0.08 + Math.random() * 0.15;
     ctx.fillStyle = ['#8a4a2a', '#9a5a30', '#7a3a1a'][Math.floor(Math.random() * 3)];
-    const sx = Math.random() * 1024;
-    const sy = Math.random() * 300;
+    const sx = Math.random() * W;
+    const sy = Math.random() * 150;
     ctx.fillRect(sx, sy, 1 + Math.random() * 4, 10 + Math.random() * 50);
     // Drip spread
     ctx.globalAlpha = 0.04;
     ctx.fillRect(sx - 2, sy + 20, 6, Math.random() * 30);
   }
 
-  // Graffiti and stickers
   const graffiti = ['#ff4444', '#44aaff', '#ffaa00', '#aa44ff', '#44ff88', '#ff6688', '#00ccff', '#ff8844'];
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 8; i++) {
     ctx.globalAlpha = 0.2 + Math.random() * 0.35;
     ctx.fillStyle = graffiti[Math.floor(Math.random() * graffiti.length)];
     ctx.fillRect(
-      40 + Math.random() * 900,
-      60 + Math.random() * 350,
+      20 + Math.random() * (W - 80),
+      30 + Math.random() * (H - 80),
       10 + Math.random() * 40,
       8 + Math.random() * 25
     );
   }
 
-  // Seam lines
   ctx.globalAlpha = 0.25;
   ctx.strokeStyle = '#3a3020';
-  ctx.lineWidth = 1.5;
-  for (let y = 0; y < 512; y += 128) {
+  ctx.lineWidth = 1;
+  for (let y = 0; y < H; y += 64) {
     ctx.beginPath();
     ctx.moveTo(0, y);
-    ctx.lineTo(1024, y);
+    ctx.lineTo(W, y);
     ctx.stroke();
   }
 
-  // Rivet dots along seams
   ctx.fillStyle = '#5a5040';
-  for (let y = 0; y < 512; y += 128) {
-    for (let x = 20; x < 1024; x += 40) {
+  for (let y = 0; y < H; y += 64) {
+    for (let x = 10; x < W; x += 25) {
       ctx.globalAlpha = 0.2 + Math.random() * 0.15;
       ctx.beginPath();
       ctx.arc(x, y, 2, 0, Math.PI * 2);
@@ -81,13 +75,12 @@ function createTrailerTexture() {
     }
   }
 
-  // Warm interior light reflection on exterior
-  const warmGlow = ctx.createRadialGradient(500, 200, 30, 500, 200, 250);
+  const warmGlow = ctx.createRadialGradient(W / 2, H / 2, 20, W / 2, H / 2, 150);
   warmGlow.addColorStop(0, 'rgba(255, 170, 70, 0.08)');
   warmGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
   ctx.globalAlpha = 1;
   ctx.fillStyle = warmGlow;
-  ctx.fillRect(0, 0, 1024, 512);
+  ctx.fillRect(0, 0, W, H);
 
   ctx.globalAlpha = 1;
   const tex = new THREE.CanvasTexture(canvas);
@@ -319,14 +312,18 @@ export function createTrailer(scene) {
   candleLight.position.set(-1.8, 0.7, 2.8);
   group.add(candleLight);
 
-  // String lights under awning (catenary curve)
+  // String lights under awning — 8 bulbs, 1 shared light
   const stringLights = [];
   const bulbGeo = new THREE.SphereGeometry(0.04, 6, 6);
-  const bulbCount = 16;
+  const bulbCount = 8;
   const slStartX = -5.3;
   const slEndX = 2.2;
   const wireY = 3.3;
   const wireZ = 2.5;
+
+  const slLight = new THREE.PointLight(0xffaa44, 0.4, 6, 2);
+  slLight.position.set((slStartX + slEndX) / 2, wireY - 0.2, wireZ);
+  group.add(slLight);
 
   for (let i = 0; i < bulbCount; i++) {
     const t = i / (bulbCount - 1);
@@ -344,14 +341,8 @@ export function createTrailer(scene) {
     bulb.position.set(x, y, z);
     group.add(bulb);
 
-    const light = new THREE.PointLight(0xffaa44, 0.15, 3, 2);
-    light.position.set(x, y - 0.05, z);
-    group.add(light);
-
     stringLights.push({
       bulb,
-      light,
-      baseIntensity: 0.1 + Math.random() * 0.1,
       flickerSpeed: 3 + Math.random() * 5,
       flickerPhase: Math.random() * Math.PI * 2,
     });
@@ -360,10 +351,11 @@ export function createTrailer(scene) {
   scene.add(group);
 
   function updateStringLights(elapsed) {
+    const flicker = 0.7 + 0.3 * Math.sin(elapsed * 2.5);
+    slLight.intensity = 0.4 * flicker;
     for (const sl of stringLights) {
-      const flicker = 0.7 + 0.3 * Math.sin(elapsed * sl.flickerSpeed + sl.flickerPhase);
-      sl.light.intensity = sl.baseIntensity * flicker;
-      sl.bulb.material.opacity = 0.6 + 0.4 * flicker;
+      const f = 0.7 + 0.3 * Math.sin(elapsed * sl.flickerSpeed + sl.flickerPhase);
+      sl.bulb.material.opacity = 0.6 + 0.4 * f;
     }
   }
 

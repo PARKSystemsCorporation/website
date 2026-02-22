@@ -265,13 +265,21 @@ function addRooftopDetails(group, buildings) {
 
 // --- BILLBOARDS (flush on building faces) ---
 
+const BILLBOARD_TEX_CACHE = [];
+function getBillboardTexture() {
+  if (BILLBOARD_TEX_CACHE.length < 6) {
+    BILLBOARD_TEX_CACHE.push(createBillboardTexture());
+  }
+  return BILLBOARD_TEX_CACHE[Math.floor(Math.random() * BILLBOARD_TEX_CACHE.length)];
+}
+
 function addBillboards(group, buildings) {
   const flickerBoards = [];
   const near = buildings.filter(b => b.dist < 55 && b.h > 10);
-  const chosen = near.sort(() => Math.random() - 0.5).slice(0, 50);
+  const chosen = near.sort(() => Math.random() - 0.5).slice(0, 28);
 
   for (const b of chosen) {
-    const { tex, color: bbColor } = createBillboardTexture();
+    const { tex, color: bbColor } = getBillboardTexture();
     const bw = 1.5 + Math.random() * Math.min(b.w * 0.6, 4);
     const bh = bw * 0.5;
     const geo = new THREE.PlaneGeometry(bw, bh);
@@ -306,18 +314,10 @@ function addBillboards(group, buildings) {
     board.position.set(bx, boardY, bz);
     group.add(board);
 
-    // Colored glow light for the billboard
-    const gl = new THREE.PointLight(bbColor, 0.4, 8, 2);
-    gl.position.copy(board.position);
-    group.add(gl);
-
-    // Some billboards flicker
     if (Math.random() < 0.3) {
       flickerBoards.push({
         mesh: board,
-        light: gl,
         baseOpacity: mat.opacity,
-        baseLightIntensity: gl.intensity,
         speed: 1.5 + Math.random() * 5,
         phase: Math.random() * Math.PI * 2,
         pattern: Math.random() < 0.5 ? 'pulse' : 'glitch',
@@ -334,7 +334,7 @@ function addBillboards(group, buildings) {
 function addNeonEdges(group, buildings) {
   const edgeColors = [0x00ccff, 0xff0066, 0x00ff88, 0xff6600, 0xcc44ff, 0x00ffcc];
   const near = buildings.filter(b => b.dist < 50 && b.h > 15);
-  const chosen = near.sort(() => Math.random() - 0.5).slice(0, 35);
+  const chosen = near.sort(() => Math.random() - 0.5).slice(0, 18);
 
   for (const b of chosen) {
     const c = edgeColors[Math.floor(Math.random() * edgeColors.length)];
@@ -368,7 +368,7 @@ function addNeonEdges(group, buildings) {
 // --- BASE GLOW LIGHTS ---
 
 function addBaseLights(group, buildings) {
-  const near = buildings.filter(b => b.dist < 45).sort(() => Math.random() - 0.5).slice(0, 12);
+  const near = buildings.filter(b => b.dist < 45).sort(() => Math.random() - 0.5).slice(0, 6);
   const glowColors = [0x00ccff, 0xff0066, 0x4488ff, 0x00ff88, 0xcc44ff, 0xff6600];
 
   for (const b of near) {
@@ -431,13 +431,9 @@ export function updateNeonFlicker(flickerBoards, elapsed) {
   if (!flickerBoards) return;
   for (const fb of flickerBoards) {
     const t = elapsed * fb.speed + fb.phase;
-    let factor;
-    if (fb.pattern === 'pulse') {
-      factor = 0.6 + 0.4 * Math.sin(t);
-    } else {
-      factor = Math.sin(t * 6) > -0.3 ? 1 : 0.05;
-    }
+    const factor = fb.pattern === 'pulse'
+      ? 0.6 + 0.4 * Math.sin(t)
+      : (Math.sin(t * 6) > -0.3 ? 1 : 0.05);
     fb.mesh.material.opacity = fb.baseOpacity * factor;
-    fb.light.intensity = fb.baseLightIntensity * factor;
   }
 }
