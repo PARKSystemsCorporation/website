@@ -2,7 +2,7 @@ export function createOverlay() {
   const overlay = document.getElementById('overlay');
 
   overlay.innerHTML = `
-    <div class="brand">View Escape</div>
+    <div class="brand">PARKSYSTEMS<br><span class="brand-sub">CORPORATION</span></div>
     <nav class="nav-links">
       <a href="https://parksystemscorporation.com/mmo"
          class="nav-link nav-link--mmo"
