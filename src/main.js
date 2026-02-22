@@ -39,7 +39,7 @@ renderer.toneMappingExposure = 1.15;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-const { composer, rainUpdate } = setupAtmosphere(scene, camera, renderer);
+const { composer, rainUpdate, bloomPass } = setupAtmosphere(scene, camera, renderer);
 createOverlay();
 
 const clock = new THREE.Clock();
@@ -131,5 +131,8 @@ window.addEventListener('resize', () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     composer.setSize(w, h);
     composer.setPixelRatio(renderer.getPixelRatio());
+    if (bloomPass && bloomPass.resolution) {
+      bloomPass.resolution.set(Math.floor(w / 2), Math.floor(h / 2));
+    }
   }, 100);
 });

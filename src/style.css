@@ -146,6 +146,7 @@ html, body {
 .loading.fade-out {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 2.5s ease;
 }
 
 @media (max-width: 768px) {
