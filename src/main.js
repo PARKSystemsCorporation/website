@@ -1,11 +1,8 @@
 import * as THREE from 'three';
-import { createCity, updateNeonFlicker } from './scene/city.js';
-import { createPlatform } from './scene/platform.js';
-import { createTrailer } from './scene/trailer.js';
-import { createVegetation } from './scene/vegetation.js';
+import { createHeroBuilding } from './scene/hero-building.js';
+import { createBackgroundTowers } from './scene/background-towers.js';
 import { setupAtmosphere } from './scene/atmosphere.js';
 import { setupLighting } from './scene/lighting.js';
-import { createEffects } from './scene/effects.js';
 import { createOverlay } from './ui/overlay.js';
 import './style.css';
 
@@ -18,11 +15,11 @@ const camera = new THREE.PerspectiveCamera(
   500
 );
 
-const startPos = new THREE.Vector3(-8, 12, 25);
-const endPos = new THREE.Vector3(-5, 10, 18);
+const startPos = new THREE.Vector3(5, 38, 50);
+const endPos = new THREE.Vector3(2, 32, 42);
 camera.position.copy(startPos);
 
-const lookAt = new THREE.Vector3(-4, 1, -5);
+const lookAt = new THREE.Vector3(14, -8, -18);
 camera.lookAt(lookAt);
 
 const renderer = new THREE.WebGLRenderer({
@@ -32,50 +29,12 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.8;
+renderer.toneMappingExposure = 0.85;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-const { group: cityGroup, flickerBoards } = createCity(scene);
-
-// Parent group for cabin compound — rotate 90deg without moving camera
-const cabinPivot = new THREE.Group();
-scene.add(cabinPivot);
-
-createPlatform(cabinPivot);
-const { group: trailerGroup, updateStringLights } = createTrailer(cabinPivot);
-const vegetation = createVegetation(cabinPivot);
-
-cabinPivot.rotation.y = Math.PI / 2 + Math.PI;
-
 const { composer, rainUpdate } = setupAtmosphere(scene, camera, renderer);
-setupLighting(scene, cabinPivot);
-const effects = createEffects(scene);
 createOverlay();
-
-let targetMX = 0, targetMY = 0;
-let currentMX = 0, currentMY = 0;
-
-document.addEventListener('mousemove', (e) => {
-  targetMX = (e.clientX / window.innerWidth - 0.5) * 2;
-  targetMY = (e.clientY / window.innerHeight - 0.5) * 2;
-});
-
-document.addEventListener('touchmove', (e) => {
-  if (e.touches.length > 0) {
-    targetMX = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
-    targetMY = (e.touches[0].clientY / window.innerHeight - 0.5) * 2;
-  }
-}, { passive: true });
-
-function updateVegetation(elapsed) {
-  for (const sprite of vegetation.children) {
-    const ud = sprite.userData;
-    if (ud.baseX !== undefined) {
-      sprite.position.x = ud.baseX + Math.sin(elapsed * ud.swaySpeed + ud.swayOffset) * ud.swayAmount;
-    }
-  }
-}
 
 const clock = new THREE.Clock();
 const INTRO_DURATION = 2.5;
@@ -84,46 +43,36 @@ function easeOutCubic(t) {
   return 1 - Math.pow(1 - t, 3);
 }
 
-function animate() {
-  requestAnimationFrame(animate);
+async function init() {
+  createBackgroundTowers(scene);
+  await createHeroBuilding(scene);
+  setupLighting(scene);
 
-  const delta = clock.getDelta();
-  const elapsed = clock.getElapsedTime();
+  function animate() {
+    requestAnimationFrame(animate);
+    const delta = clock.getDelta();
+    const elapsed = clock.getElapsedTime();
 
-  if (elapsed < INTRO_DURATION) {
-    const t = easeOutCubic(elapsed / INTRO_DURATION);
-    camera.position.lerpVectors(startPos, endPos, t);
-  } else {
-    currentMX += (targetMX - currentMX) * 0.04;
-    currentMY += (targetMY - currentMY) * 0.04;
+    if (elapsed < INTRO_DURATION) {
+      const t = easeOutCubic(elapsed / INTRO_DURATION);
+      camera.position.lerpVectors(startPos, endPos, t);
+    }
 
-    const breatheX = Math.sin(elapsed * 0.8) * 0.08;
-    const breatheY = Math.cos(elapsed * 0.5) * 0.05;
-
-    camera.position.x = endPos.x + currentMX * 0.6 + breatheX;
-    camera.position.y = endPos.y - currentMY * 0.35 + breatheY;
-    camera.position.z = endPos.z;
+    camera.lookAt(lookAt);
+    rainUpdate(delta, elapsed);
+    composer.render();
   }
-
-  camera.lookAt(lookAt);
-
-  rainUpdate(delta, elapsed);
-  updateVegetation(elapsed);
-  updateNeonFlicker(flickerBoards, elapsed);
-  updateStringLights(elapsed);
-  effects.update(elapsed, delta);
-
-  composer.render();
+  animate();
 }
 
-animate();
+init();
 
 const loadingEl = document.getElementById('loading');
 if (loadingEl) {
   setTimeout(() => {
     loadingEl.classList.add('fade-out');
     setTimeout(() => loadingEl.remove(), 2000);
-  }, 800);
+  }, 1200);
 }
 
 let resizeT = 0;

@@ -33,38 +33,27 @@ const VignetteShader = {
 };
 
 export function setupAtmosphere(scene, camera, renderer) {
-  scene.fog = new THREE.FogExp2(0x040410, 0.007);
-  scene.background = new THREE.Color(0x040410);
+  scene.fog = new THREE.FogExp2(0x0a0a18, 0.014);
+  scene.background = new THREE.Color(0x050510);
 
-  const rainCount = 1200;
-  const positions = new Float32Array(rainCount * 3);
-  const velocities = new Float32Array(rainCount);
-
-  const spreadX = 60;
-  const spreadY = 30;
-  const spreadZ = 60;
-
-  for (let i = 0; i < rainCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * spreadX;
-    positions[i * 3 + 1] = Math.random() * spreadY;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * spreadZ;
-    velocities[i] = 8 + Math.random() * 10;
-  }
-
-  const rainGeo = new THREE.BufferGeometry();
-  rainGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-  const rainMat = new THREE.PointsMaterial({
-    color: 0x8899bb,
-    size: 0.06,
+  const fogGroup = new THREE.Group();
+  const fogMat = new THREE.MeshBasicMaterial({
+    color: 0x1a1a2e,
     transparent: true,
-    opacity: 0.35,
-    blending: THREE.AdditiveBlending,
+    opacity: 0.12,
+    side: THREE.DoubleSide,
     depthWrite: false,
   });
 
-  const rain = new THREE.Points(rainGeo, rainMat);
-  scene.add(rain);
+  const heights = [-15, -8, 0, 8, 15];
+  heights.forEach((h) => {
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(120, 80), fogMat.clone());
+    plane.rotation.x = -Math.PI / 2;
+    plane.position.set(0, h, -25);
+    plane.material.opacity = 0.06 + Math.abs(h) * 0.006;
+    fogGroup.add(plane);
+  });
+  scene.add(fogGroup);
 
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
@@ -74,27 +63,16 @@ export function setupAtmosphere(scene, camera, renderer) {
       Math.floor(window.innerWidth / 2),
       Math.floor(window.innerHeight / 2)
     ),
-    0.9,
-    0.6,
-    0.55
+    1.1,
+    0.65,
+    0.48
   );
   composer.addPass(bloomPass);
 
   const vignettePass = new ShaderPass(VignetteShader);
   composer.addPass(vignettePass);
 
-  function rainUpdate(delta) {
-    const pos = rain.geometry.attributes.position.array;
-    for (let i = 0; i < rainCount; i++) {
-      pos[i * 3 + 1] -= velocities[i] * delta;
-      if (pos[i * 3 + 1] < -3) {
-        pos[i * 3 + 1] = spreadY;
-        pos[i * 3] = (Math.random() - 0.5) * spreadX;
-        pos[i * 3 + 2] = (Math.random() - 0.5) * spreadZ;
-      }
-    }
-    rain.geometry.attributes.position.needsUpdate = true;
-  }
+  function rainUpdate(delta, elapsed) {}
 
   return { composer, rainUpdate, bloomPass };
 }

@@ -1,35 +1,39 @@
 import * as THREE from 'three';
 
-export function setupLighting(scene, cabinPivot) {
-  scene.add(new THREE.AmbientLight(0x060612, 0.12));
-  scene.add(new THREE.HemisphereLight(0x080818, 0x060400, 0.12));
+export function setupLighting(scene) {
+  scene.add(new THREE.AmbientLight(0x080818, 0.1));
+  scene.add(new THREE.HemisphereLight(0x0a0a20, 0x080400, 0.1));
 
-  // --- CABIN SANCTUARY ---
-  const trailerMain = new THREE.PointLight(0xff8844, 1.5, 14, 1.5);
-  trailerMain.position.set(2.5, 2.5, -1.5);
-  cabinPivot.add(trailerMain);
+  const heroX = 12;
+  const heroZ = -15;
 
-  const trailerDeep = new THREE.PointLight(0xffaa55, 1.0, 10, 1.5);
-  trailerDeep.position.set(4.5, 2, -2);
-  cabinPivot.add(trailerDeep);
+  const basePink = new THREE.PointLight(0xff0066, 0.8, 25, 1.5);
+  basePink.position.set(heroX, -15, heroZ);
+  scene.add(basePink);
 
-  const loungeWarm = new THREE.PointLight(0xff9944, 0.8, 8, 1.6);
-  loungeWarm.position.set(-3, 1.5, 2);
-  cabinPivot.add(loungeWarm);
+  const baseCyan = new THREE.PointLight(0x00ccff, 0.6, 20, 1.5);
+  baseCyan.position.set(heroX + 8, -10, heroZ + 5);
+  scene.add(baseCyan);
 
-  const cabinCeiling = new THREE.PointLight(0xffcc88, 0.5, 6, 1.8);
-  cabinCeiling.position.set(2, 3.5, -1);
-  cabinPivot.add(cabinCeiling);
+  const midRed = new THREE.PointLight(0xff2244, 0.5, 18, 1.5);
+  midRed.position.set(heroX + 5, 5, heroZ);
+  scene.add(midRed);
 
-  // --- MOONLIGHT (backlit silhouette from behind city) ---
-  const moon = new THREE.DirectionalLight(0x1a2255, 0.4);
-  moon.position.set(-20, 30, -80);
-  moon.target.position.set(0, 0, 0);
+  const signPink = new THREE.PointLight(0xff0066, 0.4, 15, 1.5);
+  signPink.position.set(heroX + 13, 5, heroZ);
+  scene.add(signPink);
+
+  const signCyan = new THREE.PointLight(0x00ddff, 0.35, 12, 1.5);
+  signCyan.position.set(heroX, 18, heroZ + 10);
+  scene.add(signCyan);
+
+  const moon = new THREE.DirectionalLight(0x1a2255, 0.5);
+  moon.position.set(-25, 40, -60);
+  moon.target.position.set(heroX, 0, heroZ);
   scene.add(moon);
   scene.add(moon.target);
 
-  // Subtle cool rim from the side
-  const rim = new THREE.DirectionalLight(0x0a1533, 0.2);
-  rim.position.set(20, 15, -40);
+  const rim = new THREE.DirectionalLight(0x0a1533, 0.25);
+  rim.position.set(30, 20, -30);
   scene.add(rim);
 }
