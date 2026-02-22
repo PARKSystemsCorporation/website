@@ -33,7 +33,7 @@ const VignetteShader = {
 };
 
 export function setupAtmosphere(scene, camera, renderer) {
-  scene.fog = new THREE.FogExp2(0x151a2e, 0.012);
+  scene.fog = new THREE.FogExp2(0x14192a, 0.01);
   scene.background = new THREE.Color(0x060810);
 
   const fogGroup = new THREE.Group();
@@ -70,7 +70,7 @@ export function setupAtmosphere(scene, camera, renderer) {
   composer.addPass(bloomPass);
 
   const vignettePass = new ShaderPass(VignetteShader);
-  vignettePass.uniforms.darkness.value = 0.25;
+  vignettePass.uniforms.darkness.value = 0.18;
   composer.addPass(vignettePass);
 
   function rainUpdate(delta, elapsed) {}

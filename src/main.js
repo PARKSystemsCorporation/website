@@ -12,14 +12,14 @@ import './style.css';
 const scene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(
-  60,
+  65,
   window.innerWidth / window.innerHeight,
   0.1,
   500
 );
 
-const startPos = new THREE.Vector3(-2, 1.7, 5.5);
-const endPos = new THREE.Vector3(-2.5, 1.65, 5.2);
+const startPos = new THREE.Vector3(-2, 1.7, 4.8);
+const endPos = new THREE.Vector3(-2.5, 1.65, 4.5);
 camera.position.copy(startPos);
 
 const lookAtBase = new THREE.Vector3(8, 0, -12);
@@ -75,10 +75,11 @@ async function init() {
 
   const breathAmt = 0.015;
   const breathSpeed = 0.35;
+  let targetMouseX = 0.5, targetMouseY = 0.5;
   let mouseX = 0.5, mouseY = 0.5;
   window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX / window.innerWidth;
-    mouseY = e.clientY / window.innerHeight;
+    targetMouseX = e.clientX / window.innerWidth;
+    targetMouseY = e.clientY / window.innerHeight;
   });
 
   function animate() {
@@ -94,6 +95,8 @@ async function init() {
       camera.position.y = endPos.y + breath;
     }
 
+    mouseX += (targetMouseX - mouseX) * 0.05;
+    mouseY += (targetMouseY - mouseY) * 0.05;
     lookAt.copy(lookAtBase);
     lookAt.x += (mouseX - 0.5) * 2.5;
     lookAt.y += (mouseY - 0.5) * 1.5;
