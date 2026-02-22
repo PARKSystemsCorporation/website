@@ -33,24 +33,24 @@ const VignetteShader = {
 };
 
 export function setupAtmosphere(scene, camera, renderer) {
-  scene.fog = new THREE.FogExp2(0x0a0a18, 0.014);
-  scene.background = new THREE.Color(0x050510);
+  scene.fog = new THREE.FogExp2(0x1a2035, 0.018);
+  scene.background = new THREE.Color(0x080a12);
 
   const fogGroup = new THREE.Group();
   const fogMat = new THREE.MeshBasicMaterial({
-    color: 0x1a1a2e,
+    color: 0x2a3045,
     transparent: true,
-    opacity: 0.12,
+    opacity: 0.18,
     side: THREE.DoubleSide,
     depthWrite: false,
   });
 
-  const heights = [-15, -8, 0, 8, 15];
+  const heights = [-18, -10, -2, 6, 14, 22];
   heights.forEach((h) => {
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(120, 80), fogMat.clone());
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(140, 100), fogMat.clone());
     plane.rotation.x = -Math.PI / 2;
-    plane.position.set(0, h, -25);
-    plane.material.opacity = 0.06 + Math.abs(h) * 0.006;
+    plane.position.set(0, h, -30);
+    plane.material.opacity = 0.08 + Math.abs(h) * 0.008;
     fogGroup.add(plane);
   });
   scene.add(fogGroup);
@@ -63,13 +63,14 @@ export function setupAtmosphere(scene, camera, renderer) {
       Math.floor(window.innerWidth / 2),
       Math.floor(window.innerHeight / 2)
     ),
-    1.1,
-    0.65,
-    0.48
+    1.35,
+    0.7,
+    0.42
   );
   composer.addPass(bloomPass);
 
   const vignettePass = new ShaderPass(VignetteShader);
+  vignettePass.uniforms.darkness.value = 0.35;
   composer.addPass(vignettePass);
 
   function rainUpdate(delta, elapsed) {}

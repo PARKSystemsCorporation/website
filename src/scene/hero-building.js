@@ -26,7 +26,7 @@ function createProceduralConcrete() {
   return tex;
 }
 
-function createStorefrontWindowTexture() {
+function createStorefrontWindowTexture(warm = false) {
   const W = 256, H = 256;
   const canvas = document.createElement('canvas');
   canvas.width = W;
@@ -37,12 +37,14 @@ function createStorefrontWindowTexture() {
   const cols = 6, rows = 12, ww = 28, wh = 18;
   const gapX = (W - cols * ww) / (cols + 1);
   const gapY = (H - rows * wh) / (rows + 1);
-  const colors = ['#44aaff', '#00ccff', '#ddeeff', '#ffffff', '#6688ff'];
+  const colors = warm
+    ? ['#ff8844', '#ffaa66', '#ffcc88', '#ff6622', '#dd5522']
+    : ['#44aaff', '#00ccff', '#ddeeff', '#ffffff', '#6688ff'];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
-      if (Math.random() < 0.6) {
+      if (Math.random() < 0.65) {
         ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-        ctx.globalAlpha = 0.5 + Math.random() * 0.5;
+        ctx.globalAlpha = 0.6 + Math.random() * 0.4;
         ctx.fillRect(gapX + c * (ww + gapX), gapY + r * (wh + gapY), ww, wh);
       }
     }
@@ -147,7 +149,8 @@ export async function createHeroBuilding(scene) {
     concreteTex = createProceduralConcrete();
   }
 
-  storefrontTex = createStorefrontWindowTexture();
+  const storefrontTexCool = createStorefrontWindowTexture(false);
+  const storefrontTexWarm = createStorefrontWindowTexture(true);
   domeTex = createArchedDomeTexture();
 
   const concreteMat = new THREE.MeshStandardMaterial({
@@ -157,11 +160,20 @@ export async function createHeroBuilding(scene) {
     metalness: 0.1,
   });
 
-  const storefrontMat = new THREE.MeshStandardMaterial({
-    map: storefrontTex,
-    emissiveMap: storefrontTex,
+  const storefrontMatCool = new THREE.MeshStandardMaterial({
+    map: storefrontTexCool,
+    emissiveMap: storefrontTexCool,
     emissive: new THREE.Color(1, 1, 1),
-    emissiveIntensity: 0.8,
+    emissiveIntensity: 1.0,
+    color: 0x080814,
+    roughness: 0.8,
+    metalness: 0.2,
+  });
+  const storefrontMatWarm = new THREE.MeshStandardMaterial({
+    map: storefrontTexWarm,
+    emissiveMap: storefrontTexWarm,
+    emissive: new THREE.Color(1, 1, 1),
+    emissiveIntensity: 1.0,
     color: 0x080814,
     roughness: 0.8,
     metalness: 0.2,
@@ -171,7 +183,7 @@ export async function createHeroBuilding(scene) {
     map: domeTex,
     emissiveMap: domeTex,
     emissive: new THREE.Color(1, 1, 1),
-    emissiveIntensity: 0.7,
+    emissiveIntensity: 0.95,
     color: 0x0a0a18,
     roughness: 0.7,
     metalness: 0.15,
@@ -271,15 +283,17 @@ export async function createHeroBuilding(scene) {
   const vertSignTex2 = createVerticalNeonSignTexture();
   const vertSignTex3 = createVerticalNeonSignTexture();
   const vertSignTex4 = createVerticalNeonSignTexture();
+  const vertSignTex5 = createVerticalNeonSignTexture();
   const signs = [
     { x: buildingX - 12.6, y: 15, z: buildingZ, rot: Math.PI / 2, w: 2.5, h: 9 },
     { x: buildingX + 12.6, y: -8, z: buildingZ - 9.2, rot: 0, w: 2, h: 7 },
     { x: buildingX + 9, y: 28, z: buildingZ - 7.2, rot: -Math.PI / 2, w: 2, h: 6 },
+    { x: buildingX - 12.6, y: -5, z: buildingZ - 9.2, rot: 0, w: 2.2, h: 8 },
   ];
-  [vertSignTex2, vertSignTex3, vertSignTex4].forEach((tex, i) => {
+  [vertSignTex2, vertSignTex3, vertSignTex4, vertSignTex5].forEach((tex, i) => {
     if (i >= signs.length) return;
     const s = signs[i];
-    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.95, side: THREE.DoubleSide });
+    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.98, side: THREE.DoubleSide });
     const sign = new THREE.Mesh(new THREE.PlaneGeometry(s.w, s.h), mat);
     sign.position.set(s.x, s.y, s.z);
     sign.rotation.y = s.rot;
@@ -291,6 +305,7 @@ export async function createHeroBuilding(scene) {
     { x: buildingX, y: 18, z: buildingZ + 9.2, w: 8, h: 1.5 },
     { x: buildingX + 3, y: -12, z: buildingZ + 9.2, w: 6, h: 1.2 },
     { x: buildingX - 8, y: 5, z: buildingZ - 7.2, w: 5, h: 1 },
+    { x: buildingX + 2, y: 24, z: buildingZ - 1, w: 6, h: 1.2 },
   ];
   horizSigns.forEach(({ x, y, z, w, h }) => {
     const mat = new THREE.MeshBasicMaterial({ map: horizSignTex, transparent: true, opacity: 0.9, side: THREE.DoubleSide });
@@ -300,25 +315,24 @@ export async function createHeroBuilding(scene) {
     group.add(sign);
   });
 
-  const domeBandMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 });
+  const domeBandMat = new THREE.MeshBasicMaterial({ color: 0xff6688, transparent: true, opacity: 0.95 });
   const domeBand = new THREE.Mesh(new THREE.RingGeometry(7, 8.5, 32), domeBandMat);
   domeBand.position.set(buildingX + 2, 22, buildingZ - 1);
   domeBand.rotation.x = -Math.PI / 2;
   group.add(domeBand);
 
-  const storefrontBlock = new THREE.Mesh(
-    new THREE.BoxGeometry(8, 6, 0.5),
-    storefrontMat
-  );
-  storefrontBlock.position.set(buildingX - 8, -8, buildingZ + 9.3);
-  group.add(storefrontBlock);
-
-  const storefrontBlock2 = new THREE.Mesh(
-    new THREE.BoxGeometry(6, 5, 0.5),
-    storefrontMat
-  );
-  storefrontBlock2.position.set(buildingX + 10, -5, buildingZ - 9.3);
-  group.add(storefrontBlock2);
+  const storefronts = [
+    { x: buildingX - 8, y: -8, z: buildingZ + 9.3, w: 8, h: 6, warm: true },
+    { x: buildingX + 10, y: -5, z: buildingZ - 9.3, w: 6, h: 5, warm: false },
+    { x: buildingX - 12.6, y: 2, z: buildingZ + 9.3, w: 5, h: 4, warm: true },
+    { x: buildingX + 12.6, y: -15, z: buildingZ - 9.3, w: 4, h: 3.5, warm: false },
+  ];
+  storefronts.forEach(({ x, y, z, w, h, warm }) => {
+    const mat = warm ? storefrontMatWarm : storefrontMatCool;
+    const block = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.5), mat);
+    block.position.set(x, y, z);
+    group.add(block);
+  });
 
   scene.add(group);
   return { group, buildingX, buildingZ };

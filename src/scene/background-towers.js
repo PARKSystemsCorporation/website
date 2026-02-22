@@ -34,7 +34,7 @@ export function createBackgroundTowers(scene) {
     color: 0x080814,
     emissiveMap: windowTex,
     emissive: new THREE.Color(1, 1, 1),
-    emissiveIntensity: 0.5,
+    emissiveIntensity: 0.65,
     roughness: 0.9,
     metalness: 0.2,
   });
@@ -48,23 +48,23 @@ export function createBackgroundTowers(scene) {
     { x: -30, z: -50, w: 4, h: 22, d: 5 },
   ];
 
-  const neonColors = [0x00ccff, 0xff0066, 0x00ff88];
+  const neonColors = [0xff0066, 0xff3366, 0xcc0044];
   towers.forEach((t, i) => {
     const box = new THREE.Mesh(new THREE.BoxGeometry(t.w, t.h, t.d), mat);
     box.position.set(t.x, t.h / 2 - 15, t.z);
     group.add(box);
 
-    if (i < 3) {
+    if (i < 4) {
       const edgeMat = new THREE.MeshBasicMaterial({
         color: neonColors[i % 3],
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.55,
       });
       const edge = new THREE.Mesh(
-        new THREE.BoxGeometry(0.06, t.h * 0.6, 0.06),
+        new THREE.BoxGeometry(0.08, t.h * 0.7, 0.08),
         edgeMat
       );
-      edge.position.set(t.x + t.w / 2 + 0.05, t.h / 2 - 15 + t.h * 0.2, t.z);
+      edge.position.set(t.x + t.w / 2 + 0.05, t.h / 2 - 15 + t.h * 0.15, t.z);
       group.add(edge);
     }
   });
