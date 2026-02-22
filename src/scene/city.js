@@ -109,7 +109,7 @@ export function createCity(scene) {
     color: 0x0a0a18,
     emissiveMap: windowTex,
     emissive: new THREE.Color(1, 1, 1),
-    emissiveIntensity: 2.5,
+    emissiveIntensity: 0.8,
     roughness: 0.85,
     metalness: 0.25,
   });
@@ -170,115 +170,8 @@ export function createCity(scene) {
   if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
   group.add(mesh);
 
-  const flickerStrips = addNeonStrips(group);
-  addNeonSigns(group);
-
   scene.add(group);
-  return { group, flickerStrips };
+  return { group, flickerStrips: [] };
 }
 
-function addNeonSigns(group) {
-  const signColors = [0x00ffff, 0xff00ff, 0x00ff88, 0xff3366, 0xffaa00, 0x4488ff, 0xff4444, 0x00ddff];
-
-  for (let i = 0; i < 50; i++) {
-    const sw = 1.5 + Math.random() * 4;
-    const sh = 0.8 + Math.random() * 2;
-    const geo = new THREE.PlaneGeometry(sw, sh);
-    const c = signColors[Math.floor(Math.random() * signColors.length)];
-
-    const mat = new THREE.MeshBasicMaterial({
-      color: c,
-      transparent: true,
-      opacity: 0.5 + Math.random() * 0.4,
-      side: THREE.DoubleSide,
-    });
-
-    const sign = new THREE.Mesh(geo, mat);
-
-    const leftBias = Math.random() < 0.75;
-    let angle;
-    if (leftBias) {
-      angle = -(0.15 + Math.random() * 0.85);
-    } else {
-      angle = -0.8 + Math.random() * 1.6;
-    }
-    const dist = 18 + Math.random() * 45;
-
-    sign.position.set(
-      Math.sin(angle) * dist + (Math.random() - 0.5) * 4,
-      -8 + Math.random() * 14,
-      -Math.cos(angle) * dist
-    );
-    sign.rotation.y = angle + Math.PI + (Math.random() - 0.5) * 0.3;
-    group.add(sign);
-  }
-}
-
-function addNeonStrips(group) {
-  const colors = [0x00ffff, 0xff00ff, 0x00ff88, 0xff3366, 0x4488ff, 0xffaa00, 0x00ddff, 0xff4488, 0x44ffaa];
-  const flickerStrips = [];
-
-  for (let i = 0; i < 150; i++) {
-    const isVert = Math.random() > 0.5;
-    const len = 1.5 + Math.random() * 10;
-    const thickness = 0.1 + Math.random() * 0.2;
-    const geo = isVert
-      ? new THREE.PlaneGeometry(thickness, len)
-      : new THREE.PlaneGeometry(len, thickness);
-
-    const c = colors[Math.floor(Math.random() * colors.length)];
-    const mat = new THREE.MeshBasicMaterial({
-      color: c,
-      transparent: true,
-      opacity: 0.5 + Math.random() * 0.5,
-      side: THREE.DoubleSide,
-    });
-
-    const strip = new THREE.Mesh(geo, mat);
-
-    const leftBias = Math.random() < 0.75;
-    let angle;
-    if (leftBias) {
-      angle = -(0.1 + Math.random() * 0.9);
-    } else {
-      angle = -1.0 + Math.random() * 2.0;
-    }
-    const dist = 16 + Math.random() * 55;
-
-    strip.position.set(
-      Math.sin(angle) * dist + (Math.random() - 0.5) * 5,
-      -15 + Math.random() * 22,
-      -Math.cos(angle) * dist
-    );
-    strip.rotation.y = angle + Math.PI;
-    group.add(strip);
-
-    if (flickerStrips.length < 25 && Math.random() < 0.2) {
-      const roll = Math.random();
-      flickerStrips.push({
-        mesh: strip,
-        baseOpacity: strip.material.opacity,
-        pattern: roll < 0.4 ? 'rapid' : roll < 0.7 ? 'slow' : 'cutout',
-        phase: Math.random() * Math.PI * 2,
-        speed: 2 + Math.random() * 6,
-      });
-    }
-  }
-
-  return flickerStrips;
-}
-
-export function updateNeonFlicker(flickerStrips, elapsed) {
-  for (const s of flickerStrips) {
-    const t = elapsed * s.speed + s.phase;
-    let intensity;
-    if (s.pattern === 'rapid') {
-      intensity = Math.sin(t * 8) > 0.2 ? 1 : 0.1;
-    } else if (s.pattern === 'slow') {
-      intensity = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t));
-    } else {
-      intensity = Math.sin(t * 3) > -0.8 ? 1 : 0;
-    }
-    s.mesh.material.opacity = s.baseOpacity * intensity;
-  }
-}
+export function updateNeonFlicker() {}

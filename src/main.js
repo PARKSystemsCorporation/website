@@ -32,7 +32,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.85;
+renderer.toneMappingExposure = 0.7;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
@@ -46,7 +46,7 @@ createPlatform(cabinPivot);
 const { group: trailerGroup, updateStringLights } = createTrailer(cabinPivot);
 const vegetation = createVegetation(cabinPivot);
 
-cabinPivot.rotation.y = Math.PI / 2;
+cabinPivot.rotation.y = Math.PI / 2 + Math.PI;
 
 const { composer, rainUpdate } = setupAtmosphere(scene, camera, renderer);
 setupLighting(scene, cabinPivot);
