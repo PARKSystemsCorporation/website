@@ -2,20 +2,47 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+
+const VignetteShader = {
+  uniforms: {
+    tDiffuse: { value: null },
+    darkness: { value: 0.45 },
+    offset: { value: 1.1 },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform sampler2D tDiffuse;
+    uniform float darkness;
+    uniform float offset;
+    varying vec2 vUv;
+    void main() {
+      vec4 texel = texture2D(tDiffuse, vUv);
+      vec2 uv = (vUv - vec2(0.5)) * vec2(offset);
+      float vig = clamp(1.0 - dot(uv, uv), 0.0, 1.0);
+      texel.rgb *= mix(1.0 - darkness, 1.0, vig);
+      gl_FragColor = texel;
+    }
+  `,
+};
 
 export function setupAtmosphere(scene, camera, renderer) {
-  // Dark blue-purple fog
-  scene.fog = new THREE.FogExp2(0x04040c, 0.013);
+  scene.fog = new THREE.FogExp2(0x04040c, 0.010);
   scene.background = new THREE.Color(0x04040c);
 
-  // Rain particle system
-  const rainCount = 2500;
+  const rainCount = 3000;
   const positions = new Float32Array(rainCount * 3);
   const velocities = new Float32Array(rainCount);
 
-  const spreadX = 50;
-  const spreadY = 25;
-  const spreadZ = 50;
+  const spreadX = 60;
+  const spreadY = 30;
+  const spreadZ = 60;
 
   for (let i = 0; i < rainCount; i++) {
     positions[i * 3] = (Math.random() - 0.5) * spreadX;
@@ -39,7 +66,6 @@ export function setupAtmosphere(scene, camera, renderer) {
   const rain = new THREE.Points(rainGeo, rainMat);
   scene.add(rain);
 
-  // Post-processing: bloom for neon glow
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
 
@@ -48,11 +74,14 @@ export function setupAtmosphere(scene, camera, renderer) {
       Math.floor(window.innerWidth / 2),
       Math.floor(window.innerHeight / 2)
     ),
-    0.7,
-    0.35,
-    0.82
+    0.8,
+    0.4,
+    0.75
   );
   composer.addPass(bloomPass);
+
+  const vignettePass = new ShaderPass(VignetteShader);
+  composer.addPass(vignettePass);
 
   function rainUpdate(delta) {
     const pos = rain.geometry.attributes.position.array;
