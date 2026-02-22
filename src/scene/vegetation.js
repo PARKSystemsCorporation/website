@@ -2,35 +2,55 @@ import * as THREE from 'three';
 
 function createLeafTexture(hueShift) {
   const canvas = document.createElement('canvas');
-  canvas.width = 64;
-  canvas.height = 64;
+  canvas.width = 128;
+  canvas.height = 128;
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, 64, 64);
+  ctx.clearRect(0, 0, 128, 128);
 
-  // Leaf cluster
-  for (let i = 0; i < 25; i++) {
-    const x = 16 + Math.random() * 32;
-    const y = 5 + Math.random() * 45;
-    const size = 3 + Math.random() * 9;
+  // Main leaf cluster with more density
+  for (let i = 0; i < 50; i++) {
+    const x = 24 + Math.random() * 80;
+    const y = 8 + Math.random() * 95;
+    const size = 4 + Math.random() * 14;
 
-    const g = 50 + Math.random() * 70 + hueShift;
+    const g = 50 + Math.random() * 80 + hueShift;
     const r = 8 + Math.random() * 25;
-    const b = 15 + Math.random() * 35;
+    const b = 12 + Math.random() * 30;
 
-    ctx.globalAlpha = 0.5 + Math.random() * 0.5;
+    ctx.globalAlpha = 0.4 + Math.random() * 0.5;
     ctx.fillStyle = `rgb(${r}, ${Math.min(255, g)}, ${b})`;
     ctx.beginPath();
     ctx.ellipse(x, y, size * 0.7, size * 1.4, Math.random() * Math.PI, 0, Math.PI * 2);
     ctx.fill();
+
+    // Leaf vein highlight
+    if (Math.random() < 0.3) {
+      ctx.globalAlpha = 0.15;
+      ctx.strokeStyle = `rgb(${r + 20}, ${Math.min(255, g + 30)}, ${b + 15})`;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(x, y - size);
+      ctx.lineTo(x, y + size);
+      ctx.stroke();
+    }
   }
 
-  // Stem
+  // Stem with branching
   ctx.globalAlpha = 0.5;
   ctx.strokeStyle = '#1a3a10';
-  ctx.lineWidth = 1.5;
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(32, 62);
-  ctx.quadraticCurveTo(30 + Math.random() * 4, 35, 32, 8);
+  ctx.moveTo(64, 125);
+  ctx.quadraticCurveTo(60 + Math.random() * 8, 70, 64, 12);
+  ctx.stroke();
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(64, 60);
+  ctx.quadraticCurveTo(45, 50, 35, 35);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(64, 50);
+  ctx.quadraticCurveTo(80, 40, 90, 30);
   ctx.stroke();
 
   ctx.globalAlpha = 1;
@@ -41,26 +61,39 @@ function createLeafTexture(hueShift) {
 
 function createFernTexture() {
   const canvas = document.createElement('canvas');
-  canvas.width = 64;
-  canvas.height = 96;
+  canvas.width = 128;
+  canvas.height = 192;
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, 64, 96);
+  ctx.clearRect(0, 0, 128, 192);
 
-  // Frond shape - more tropical
-  for (let f = 0; f < 5; f++) {
-    const cx = 25 + Math.random() * 14;
-    const baseY = 90;
-    const tipY = 5 + Math.random() * 15;
-    const spread = 8 + Math.random() * 12;
+  // Frond shape - more tropical, higher resolution
+  for (let f = 0; f < 7; f++) {
+    const cx = 45 + Math.random() * 38;
+    const baseY = 185;
+    const tipY = 8 + Math.random() * 20;
+    const spread = 12 + Math.random() * 18;
 
-    ctx.globalAlpha = 0.4 + Math.random() * 0.4;
-    ctx.fillStyle = `rgb(${10 + Math.random() * 20}, ${40 + Math.random() * 60}, ${10 + Math.random() * 25})`;
+    ctx.globalAlpha = 0.35 + Math.random() * 0.4;
+    ctx.fillStyle = `rgb(${10 + Math.random() * 20}, ${40 + Math.random() * 65}, ${10 + Math.random() * 25})`;
     ctx.beginPath();
     ctx.moveTo(cx, baseY);
     ctx.quadraticCurveTo(cx - spread, baseY * 0.4, cx - spread * 0.3, tipY);
-    ctx.quadraticCurveTo(cx + spread * 0.3, tipY - 3, cx + spread, baseY * 0.4);
+    ctx.quadraticCurveTo(cx + spread * 0.3, tipY - 5, cx + spread, baseY * 0.4);
     ctx.closePath();
     ctx.fill();
+
+    // Individual leaflets along the frond
+    const steps = 8;
+    for (let s = 0; s < steps; s++) {
+      const t = s / steps;
+      const ly = baseY - t * (baseY - tipY);
+      const lx = cx + (Math.random() - 0.5) * spread * (1 - t);
+      ctx.globalAlpha = 0.2 + Math.random() * 0.2;
+      ctx.fillStyle = `rgb(${15 + Math.random() * 15}, ${50 + Math.random() * 50}, ${15 + Math.random() * 20})`;
+      ctx.beginPath();
+      ctx.ellipse(lx, ly, 2 + Math.random() * 4, 5 + Math.random() * 8, Math.random(), 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   ctx.globalAlpha = 1;
