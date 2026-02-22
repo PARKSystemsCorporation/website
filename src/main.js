@@ -22,7 +22,8 @@ const startPos = new THREE.Vector3(-2, 1.7, 5.5);
 const endPos = new THREE.Vector3(-2.5, 1.65, 5.2);
 camera.position.copy(startPos);
 
-const lookAt = new THREE.Vector3(8, 0, -12);
+const lookAtBase = new THREE.Vector3(8, 0, -12);
+const lookAt = lookAtBase.clone();
 camera.lookAt(lookAt);
 
 const renderer = new THREE.WebGLRenderer({
@@ -31,6 +32,8 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.15;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -72,6 +75,11 @@ async function init() {
 
   const breathAmt = 0.015;
   const breathSpeed = 0.35;
+  let mouseX = 0.5, mouseY = 0.5;
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX / window.innerWidth;
+    mouseY = e.clientY / window.innerHeight;
+  });
 
   function animate() {
     requestAnimationFrame(animate);
@@ -86,6 +94,9 @@ async function init() {
       camera.position.y = endPos.y + breath;
     }
 
+    lookAt.copy(lookAtBase);
+    lookAt.x += (mouseX - 0.5) * 2.5;
+    lookAt.y += (mouseY - 0.5) * 1.5;
     camera.lookAt(lookAt);
     updateStringLights(elapsed);
     updateVegetation(elapsed);

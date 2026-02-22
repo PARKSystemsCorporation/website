@@ -38,6 +38,16 @@ export function setupLighting(scene) {
   const moon = new THREE.DirectionalLight(0x1a2845, 0.5);
   moon.position.set(-20, 35, -50);
   moon.target.position.set(heroX, 0, heroZ);
+  moon.castShadow = true;
+  moon.shadow.mapSize.width = 1024;
+  moon.shadow.mapSize.height = 1024;
+  moon.shadow.camera.near = 0.5;
+  moon.shadow.camera.far = 80;
+  moon.shadow.camera.left = -25;
+  moon.shadow.camera.right = 25;
+  moon.shadow.camera.top = 25;
+  moon.shadow.camera.bottom = -25;
+  moon.shadow.bias = -0.0001;
   scene.add(moon);
   scene.add(moon.target);
 

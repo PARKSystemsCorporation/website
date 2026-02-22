@@ -148,6 +148,7 @@ export function createTrailer(scene) {
   const body = new THREE.Mesh(bodyGeo, bodyMat);
   body.rotation.z = Math.PI / 2;
   body.position.set(2.5, 2, -2);
+  body.castShadow = true;
   group.add(body);
 
   // End caps

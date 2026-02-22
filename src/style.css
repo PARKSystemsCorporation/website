@@ -46,15 +46,14 @@ html, body {
   width: 100%;
   text-align: center;
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 900;
   letter-spacing: 0.18em;
   line-height: 1.2;
-  color: #ff6b00;
+  color: rgba(255, 107, 0, 0.88);
   text-shadow:
-    0 0 20px rgba(255, 107, 0, 0.6),
-    0 0 50px rgba(255, 107, 0, 0.25),
-    0 2px 4px rgba(0, 0, 0, 0.8);
+    0 0 16px rgba(255, 107, 0, 0.4),
+    0 0 40px rgba(255, 107, 0, 0.15);
   text-transform: uppercase;
   user-select: none;
 }
@@ -64,10 +63,9 @@ html, body {
   font-size: 0.5em;
   font-weight: 600;
   letter-spacing: 0.4em;
-  color: #ff9944;
+  color: rgba(255, 153, 68, 0.75);
   text-shadow:
-    0 0 12px rgba(255, 153, 68, 0.4),
-    0 0 30px rgba(255, 153, 68, 0.15);
+    0 0 10px rgba(255, 153, 68, 0.3);
 }
 
 .nav-links {
@@ -81,18 +79,18 @@ html, body {
 .nav-link {
   pointer-events: auto;
   display: inline-block;
-  padding: 0.75rem 2rem;
+  padding: 0.6rem 1.6rem;
   font-family: 'Orbitron', sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   text-decoration: none;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.5);
-  border: 2px solid;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1.5px solid;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   transition: all 0.25s ease;
   cursor: pointer;
 }
