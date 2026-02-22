@@ -1,87 +1,116 @@
-import { articles } from './articles.js';
+import { articles, systemTags } from './articles.js';
 import './research.css';
 
 const app = document.getElementById('app');
+const tabs = ['Feed', 'Archive', 'Systems', 'Bazaar'];
 
 function fmtDate(iso) {
-  return iso.replace(/-/g, '.');
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-function systemsUsed() {
-  const s = new Set();
-  articles.forEach(a => a.tags.forEach(t => s.add(t)));
-  return s.size;
+function relTime(iso) {
+  const diff = Date.now() - new Date(iso + 'T00:00:00').getTime();
+  const days = Math.floor(diff / 86400000);
+  if (days === 0) return 'TODAY';
+  if (days === 1) return '1 DAY AGO';
+  return `${days} DAYS AGO`;
+}
+
+function getClassifications() {
+  const c = { Specifications: 0, Research: 0, Reports: 0 };
+  articles.forEach(a => {
+    if (a.type === 'SPEC') c.Specifications++;
+    else if (a.type === 'REPORT') c.Reports++;
+    else c.Research++;
+  });
+  return c;
+}
+
+function getSystems() {
+  const s = { KIRA: 0, EXOKIN: 0, ARIA: 0, 'Unity Bridge': 0, 'Neural Runtime': 0 };
+  articles.forEach(a => { if (a.systems) a.systems.forEach(sys => { if (s[sys] !== undefined) s[sys]++; }); });
+  return s;
 }
 
 function renderFeed() {
+  const cls = getClassifications();
+  const sys = getSystems();
+
   app.innerHTML = `
-    <div class="hud">
-      <nav class="topbar">
-        <div class="topbar-left">
-          <span class="sys-dot"></span>
-          <span class="sys-label">SYS ONLINE</span>
-          <span class="topbar-sep"></span>
-          <span class="topbar-title">RESEARCH DIVISION</span>
+    <div class="r-shell">
+      <nav class="r-nav">
+        <div class="r-nav-left">
+          ${tabs.map((t, i) => `<a href="#" class="r-tab${i === 0 ? ' r-tab--active' : ''}">${t}</a>`).join('')}
         </div>
-        <a href="/" class="topbar-link">HOME</a>
+        <a href="/" class="r-nav-home">Home</a>
       </nav>
 
-      <div class="hero">
-        <div class="hero-label">PARK SYSTEMS CORPORATION</div>
-        <h1 class="hero-title">Research Hub</h1>
-        <p class="hero-desc">Published findings, specifications, and technical reports.</p>
+      <header class="r-hero">
+        <div class="r-status"><span class="r-dot"></span>SYS ONLINE</div>
+        <div class="r-division">PARK Systems Research Division</div>
+        <h1 class="r-heading">Research Hub</h1>
+        <p class="r-desc">Published findings, specifications, and technical reports. Open knowledge for autonomous systems engineering.</p>
+      </header>
+
+      <div class="r-stats">
+        <div class="r-stat"><span class="r-stat-num">${articles.length}</span><span class="r-stat-lbl">Publications</span></div>
+        <div class="r-stat"><span class="r-stat-num">31</span><span class="r-stat-lbl">Files Spec'd</span></div>
+        <div class="r-stat"><span class="r-stat-num r-stat-active">ACTIVE</span><span class="r-stat-lbl">Status</span></div>
       </div>
 
-      <div class="stat-row">
-        <div class="stat-block">
-          <div class="stat-num">${articles.length}</div>
-          <div class="stat-label">PUBLICATIONS</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-block">
-          <div class="stat-num">${systemsUsed()}</div>
-          <div class="stat-label">TAGS INDEXED</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-block">
-          <div class="stat-num">${articles.filter(a => a.type === 'SPEC').length}</div>
-          <div class="stat-label">SPECIFICATIONS</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-block">
-          <div class="stat-num">${articles.filter(a => a.type === 'REPORT').length}</div>
-          <div class="stat-label">REPORTS</div>
-        </div>
-      </div>
+      <div class="r-layout">
+        <main class="r-main">
+          <div class="r-feed-head">
+            <span class="r-section-title">Latest Publications</span>
+          </div>
+          ${articles.map(a => `
+            <article class="r-card" data-slug="${a.slug}">
+              <div class="r-card-meta">
+                <span class="r-badge r-badge--${a.type.toLowerCase()}">${a.type}</span>
+                <span class="r-card-date">${fmtDate(a.date)}${a.subtype ? ' · ' + a.subtype : ''}</span>
+              </div>
+              <h2 class="r-card-title">${a.title}</h2>
+              <p class="r-card-summary">${a.summary}</p>
+              <div class="r-card-tags">${a.tags.map(t => `<span class="r-card-tag">${t}</span>`).join('')}</div>
+              <span class="r-card-cta">READ FULL ${a.type === 'REPORT' ? 'REPORT' : 'SPECIFICATION'} &rarr;</span>
+            </article>
+          `).join('')}
+        </main>
 
-      <div class="feed-header">
-        <span class="feed-label">LATEST PUBLICATIONS</span>
-        <span class="feed-count">${articles.length} entries</span>
-      </div>
+        <aside class="r-sidebar">
+          <div class="r-side-section">
+            <h4 class="r-side-title">Classifications</h4>
+            <ul class="r-side-list">
+              ${Object.entries(cls).map(([k, v]) => `<li class="r-side-item"><span>${k}</span><span class="r-side-count">${v}</span></li>`).join('')}
+            </ul>
+          </div>
 
-      <div class="feed">
-        ${articles.map(a => `
-          <article class="card" data-slug="${a.slug}">
-            <div class="card-top">
-              <span class="card-type card-type--${a.type.toLowerCase()}">${a.type}</span>
-              <span class="card-date">${fmtDate(a.date)}</span>
-            </div>
-            <h2 class="card-title">${a.title}</h2>
-            <p class="card-summary">${a.summary}</p>
-            <div class="card-tags">
-              ${a.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
-            </div>
-            <div class="card-action">READ &rarr;</div>
-          </article>
-        `).join('')}
+          <div class="r-side-section">
+            <h4 class="r-side-title">Systems</h4>
+            <ul class="r-side-list">
+              ${Object.entries(sys).map(([k, v]) => `<li class="r-side-item"><span>${k}</span><span class="r-side-count">${v}</span></li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="r-side-section">
+            <h4 class="r-side-title">Recent Activity</h4>
+            <ul class="r-side-activity">
+              ${articles.slice(0, 4).map(a => `<li class="r-activity-item"><span class="r-activity-name">${a.title.length > 40 ? a.title.slice(0, 40) + '...' : a.title}</span><span class="r-activity-time">${relTime(a.date)}</span></li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="r-side-section">
+            <h4 class="r-side-title">System Tags</h4>
+            <div class="r-sys-tags">${systemTags.map(t => `<span class="r-sys-tag">${t}</span>`).join('')}</div>
+          </div>
+        </aside>
       </div>
     </div>
   `;
 
-  app.querySelectorAll('.card').forEach(el => {
-    el.addEventListener('click', () => {
-      window.location.hash = el.dataset.slug;
-    });
+  app.querySelectorAll('.r-card').forEach(el => {
+    el.addEventListener('click', () => { window.location.hash = el.dataset.slug; });
   });
 }
 
@@ -90,31 +119,23 @@ function renderArticle(slug) {
   if (!a) { renderFeed(); return; }
 
   app.innerHTML = `
-    <div class="hud">
-      <nav class="topbar">
-        <div class="topbar-left">
-          <span class="sys-dot"></span>
-          <span class="sys-label">SYS ONLINE</span>
-          <span class="topbar-sep"></span>
-          <span class="topbar-title">RESEARCH DIVISION</span>
+    <div class="r-shell">
+      <nav class="r-nav">
+        <div class="r-nav-left">
+          ${tabs.map((t, i) => `<a href="#" class="r-tab${i === 0 ? ' r-tab--active' : ''}">${t}</a>`).join('')}
         </div>
-        <a href="/" class="topbar-link">HOME</a>
+        <a href="/" class="r-nav-home">Home</a>
       </nav>
 
-      <a href="#" class="back-link">&larr; ALL PUBLICATIONS</a>
-
-      <div class="doc">
-        <div class="doc-header">
-          <div class="doc-meta">
-            <span class="card-type card-type--${a.type.toLowerCase()}">${a.type}</span>
-            <span class="card-date">${fmtDate(a.date)}</span>
-          </div>
-          <h1 class="doc-title">${a.title}</h1>
-          <div class="doc-tags">
-            ${a.tags.map(t => `<span class="card-tag">${t}</span>`).join('')}
-          </div>
+      <div class="r-article-wrap">
+        <a href="#" class="r-back">&larr; All Publications</a>
+        <div class="r-article-meta">
+          <span class="r-badge r-badge--${a.type.toLowerCase()}">${a.type}</span>
+          <span class="r-card-date">${fmtDate(a.date)}${a.subtype ? ' · ' + a.subtype : ''}</span>
         </div>
-        <div class="doc-body">${a.content}</div>
+        <h1 class="r-article-title">${a.title}</h1>
+        <div class="r-card-tags">${a.tags.map(t => `<span class="r-card-tag">${t}</span>`).join('')}</div>
+        <div class="r-article-body">${a.content}</div>
       </div>
     </div>
   `;

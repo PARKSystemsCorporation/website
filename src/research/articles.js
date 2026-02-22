@@ -3,8 +3,10 @@ export const articles = [
     slug: 'kira-enterprise',
     title: 'KIRA Enterprise — Agent Orchestration Workspace',
     type: 'REPORT',
+    subtype: 'Release Notes',
     date: '2026-02-20',
     tags: ['KIRA-ENTERPRISE', 'AGENTS', 'ORCHESTRATION', 'WORKSPACE'],
+    systems: ['KIRA'],
     summary: 'The entire Enterprise UI has been replaced with a spatial, draggable agent command surface. No forms. No sidebars. A live canvas where AI agents are spawned, configured, and orchestrated in real time.',
     content: `
       <p>The entire Enterprise UI has been replaced with a spatial, draggable agent command surface. No forms. No sidebars. A live canvas where AI agents are spawned, configured, and orchestrated in real time.</p>
@@ -26,10 +28,12 @@ export const articles = [
   },
   {
     slug: 'neural-runtime',
-    title: 'Architecting a Neural Runtime: Designing a Persistent Cognitive System',
+    title: 'Architecting a Neural Runtime: Designing a Persistent Cognitive System (Without the Hype)',
     type: 'SPEC',
+    subtype: 'v1.0',
     date: '2026-02-20',
     tags: ['COGNITIVE-SYSTEM', 'NEURAL-RUNTIME', 'ARCHITECTURE', 'MEMORY'],
+    systems: ['Neural Runtime'],
     summary: 'The goal is not a chatbot with storage. The goal is a persistent neural runtime — a system that continuously learns from interaction, develops operational instincts, and evolves its behavior through experience.',
     content: `
       <p>The goal is not a chatbot with storage. The goal is a persistent neural runtime — a system that continuously learns from interaction, develops operational instincts, and evolves its behavior through experience.</p>
@@ -54,8 +58,10 @@ export const articles = [
     slug: 'fight-simulator',
     title: 'Fight Simulator — EXOKIN vs NPC Combat System',
     type: 'SPEC',
+    subtype: 'v1.0',
     date: '2026-02-16',
     tags: ['EXOKIN', 'COMBAT', 'EARE', 'PHYSICS'],
+    systems: ['EXOKIN'],
     summary: 'Full-stack combat architecture: dual-layer engine (turn-based + real-time physics), EARE-driven creature calibration, AI opponents, and procedural fight presentation — your EXOKIN fights on your behalf.',
     content: `
       <p>Full-stack combat architecture: dual-layer engine (turn-based + real-time physics), EARE-driven creature calibration, AI opponents, and procedural fight presentation — your EXOKIN fights on your behalf.</p>
@@ -77,8 +83,10 @@ export const articles = [
     slug: 'build-log-0215',
     title: 'Daily Build Log — 2026-02-15',
     type: 'REPORT',
+    subtype: 'Build Log',
     date: '2026-02-15',
     tags: ['BUILD-LOG', 'WORLD-BUILDER', 'COMBAT', 'PHYSICS'],
+    systems: ['EXOKIN'],
     summary: 'Main-branch delivery focused on World Builder authority/editor UX, physics-based combat polish, and environment collision stabilization — with deployment checkpoints captured in the commit stream.',
     content: `
       <p>Main-branch delivery focused on World Builder authority/editor UX, physics-based combat polish, and environment collision stabilization — with deployment checkpoints captured in the commit stream.</p>
@@ -100,8 +108,10 @@ export const articles = [
     slug: 'eare',
     title: 'EARE — EXOKIN Autonomous Regulation Engine',
     type: 'SPEC',
+    subtype: 'v1.0',
     date: '2026-02-13',
     tags: ['EXOKIN', 'EARE', 'AUTONOMOUS'],
+    systems: ['EXOKIN'],
     summary: 'Anti-gravity prompt: convert EXOKIN from a static ruleset into a self-regulating, autonomous species layer. No manual tuning; roles and behavior emerge from experience.',
     content: `
       <p>Anti-gravity prompt: convert EXOKIN from a static ruleset into a self-regulating, autonomous species layer. No manual tuning; roles and behavior emerge from experience.</p>
@@ -123,8 +133,10 @@ export const articles = [
     slug: 'euro-drive',
     title: 'EURO-DRIVE — Autonomous World Builder Engine',
     type: 'SPEC',
+    subtype: 'v1.0',
     date: '2026-02-12',
     tags: ['KIRA', 'NEURO-DRIVE', 'AUTONOMOUS'],
+    systems: ['KIRA'],
     summary: 'Neuro-drive loop specification for continuous autonomous world-building in KIRA.',
     content: `
       <p>Neuro-drive loop specification for continuous autonomous world-building in KIRA. The engine operates as a persistent background process that generates, populates, and evolves world content without human intervention.</p>
@@ -142,4 +154,11 @@ export const articles = [
       <p>The engine respects designated zones: player-built areas are protected, quest-critical locations are anchored, and high-traffic regions evolve conservatively. Autonomy is full in wilderness zones, constrained in civilized ones.</p>
     `,
   },
+];
+
+export const systemTags = [
+  'EARE', 'EXOKIN', 'CombatEngine', 'CombatSystem', 'AIController',
+  'NeuroDriveLoop', 'KiraState', 'IntentEngine', 'EnvironmentModel',
+  'Unity Bridge', 'PersistentWorkLoop', 'MotivationEngine',
+  'TaskGenerator', 'NeuralRuntime', 'CognitiveSystem',
 ];
