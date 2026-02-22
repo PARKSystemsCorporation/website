@@ -9,10 +9,9 @@ export function createOverlay() {
          target="_blank" rel="noopener noreferrer">
         MMO
       </a>
-      <a href="https://parkscorporation.gumroad.com/l/ixuuu"
-         class="nav-link nav-link--kira"
-         target="_blank" rel="noopener noreferrer">
-        KIRA 5.0
+      <a href="/kira/"
+         class="nav-link nav-link--kira">
+        KIRA 5.1
       </a>
       <a href="/research/"
          class="nav-link nav-link--research">

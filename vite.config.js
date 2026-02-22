@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         research: resolve(__dirname, 'research/index.html'),
+        kira: resolve(__dirname, 'kira/index.html'),
       },
     },
   },
