@@ -18,11 +18,11 @@ const camera = new THREE.PerspectiveCamera(
   500
 );
 
-const startPos = new THREE.Vector3(-4, 9, 20);
-const endPos = new THREE.Vector3(0, 7, 15);
+const startPos = new THREE.Vector3(-8, 12, 25);
+const endPos = new THREE.Vector3(-5, 10, 18);
 camera.position.copy(startPos);
 
-const lookAt = new THREE.Vector3(-6, 0, -4);
+const lookAt = new THREE.Vector3(-4, 1, -5);
 camera.lookAt(lookAt);
 
 const renderer = new THREE.WebGLRenderer({
