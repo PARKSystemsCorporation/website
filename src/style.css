@@ -45,38 +45,29 @@ html, body {
   pointer-events: auto;
   width: 100%;
   text-align: center;
-  font-family: 'Bangers', cursive;
-  font-size: clamp(2.8rem, 6vw, 4.2rem);
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  line-height: 1.1;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
   color: #ff6b00;
-  -webkit-text-stroke: 3px #000;
-  paint-order: stroke fill;
   text-shadow:
-    -3px -3px 0 #000, 3px -3px 0 #000,
-    -3px 3px 0 #000, 3px 3px 0 #000,
-    4px 4px 0 rgba(0, 0, 0, 0.5),
-    6px 6px 0 rgba(0, 0, 0, 0.3);
+    0 0 20px rgba(255, 107, 0, 0.6),
+    0 0 50px rgba(255, 107, 0, 0.25),
+    0 2px 4px rgba(0, 0, 0, 0.8);
   text-transform: uppercase;
   user-select: none;
-  filter: drop-shadow(2px 2px 0 #000);
 }
 
 .brand-sub {
   display: block;
-  font-family: 'Bebas Neue', sans-serif;
   font-size: 0.5em;
-  font-weight: 400;
-  letter-spacing: 0.35em;
-  color: #ffaa44;
-  -webkit-text-stroke: 2px #000;
-  paint-order: stroke fill;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  color: #ff9944;
   text-shadow:
-    -2px -2px 0 #000, 2px -2px 0 #000,
-    -2px 2px 0 #000, 2px 2px 0 #000,
-    3px 3px 0 rgba(0, 0, 0, 0.4);
-  filter: drop-shadow(1px 1px 0 #000);
+    0 0 12px rgba(255, 153, 68, 0.4),
+    0 0 30px rgba(255, 153, 68, 0.15);
 }
 
 .nav-links {
@@ -89,105 +80,69 @@ html, body {
 
 .nav-link {
   pointer-events: auto;
-  position: relative;
   display: inline-block;
-  padding: 0.9rem 2.2rem;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.35rem;
-  font-weight: 400;
-  letter-spacing: 0.15em;
+  padding: 0.75rem 2rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   text-decoration: none;
   color: #fff;
-  background: #111;
-  border: 3px solid #000;
-  box-shadow:
-    4px 4px 0 #000,
-    6px 6px 0 rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  -webkit-text-stroke: 1.5px #000;
-  paint-order: stroke fill;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
   cursor: pointer;
-  border-radius: 2px;
 }
 
 .nav-link:hover {
-  transform: translate(-2px, -2px);
-  box-shadow:
-    6px 6px 0 #000,
-    8px 8px 0 rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.7);
+  text-shadow: 0 0 10px currentColor;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
-.nav-link:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 #000;
-}
-
-/* MMO - hot pink comic */
 .nav-link--mmo {
-  border-color: #ff0066;
-  color: #fff;
-  background: linear-gradient(180deg, #ff1a6b 0%, #cc0052 100%);
+  border-color: rgba(255, 0, 102, 0.6);
 }
 .nav-link--mmo:hover {
-  color: #fff;
-  border-color: #ff3399;
-  box-shadow:
-    6px 6px 0 #ff0066,
-    8px 8px 0 rgba(255, 0, 102, 0.5);
+  border-color: #ff0066;
+  color: #ff3399;
 }
 
-/* KIRA - electric green comic */
 .nav-link--kira {
-  border-color: #00ff88;
-  color: #fff;
-  background: linear-gradient(180deg, #22ff99 0%, #00cc6a 100%);
+  border-color: rgba(0, 255, 136, 0.6);
 }
 .nav-link--kira:hover {
-  color: #fff;
-  border-color: #44ffaa;
-  box-shadow:
-    6px 6px 0 #00ff88,
-    8px 8px 0 rgba(0, 255, 136, 0.5);
+  border-color: #00ff88;
+  color: #44ffaa;
 }
 
-/* Research - electric blue comic */
 .nav-link--research {
-  border-color: #4488ff;
-  color: #fff;
-  background: linear-gradient(180deg, #5599ff 0%, #2266cc 100%);
+  border-color: rgba(68, 136, 255, 0.6);
 }
 .nav-link--research:hover {
-  color: #fff;
-  border-color: #66aaff;
-  box-shadow:
-    6px 6px 0 #4488ff,
-    8px 8px 0 rgba(68, 136, 255, 0.5);
+  border-color: #4488ff;
+  color: #66aaff;
 }
 
-/* Loading screen - comic style */
 .loading {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: #0a0a0a;
+  background: #050508;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
   transition: opacity 2s ease;
-  font-family: 'Bangers', cursive;
-  color: #ff6b00;
-  font-size: 1.4rem;
-  letter-spacing: 0.2em;
-  -webkit-text-stroke: 2px #000;
-  paint-order: stroke fill;
-  text-shadow:
-    -2px -2px 0 #000, 2px -2px 0 #000,
-    -2px 2px 0 #000, 2px 2px 0 #000;
+  font-family: 'Orbitron', sans-serif;
+  color: rgba(255, 107, 0, 0.6);
+  font-size: 0.9rem;
+  letter-spacing: 0.35em;
 }
 
 .loading.fade-out {
@@ -211,13 +166,7 @@ html, body {
     text-align: center;
   }
   .brand {
-    font-size: 2rem;
-    -webkit-text-stroke: 2px #000;
-    text-shadow:
-      -2px -2px 0 #000, 2px -2px 0 #000,
-      -2px 2px 0 #000, 2px 2px 0 #000;
-  }
-  .brand-sub {
-    -webkit-text-stroke: 1.5px #000;
+    font-size: 1.6rem;
+    letter-spacing: 0.12em;
   }
 }

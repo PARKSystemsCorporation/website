@@ -15,11 +15,11 @@ const camera = new THREE.PerspectiveCamera(
   500
 );
 
-const startPos = new THREE.Vector3(5, 38, 50);
-const endPos = new THREE.Vector3(2, 32, 42);
+const startPos = new THREE.Vector3(0, 28, 45);
+const endPos = new THREE.Vector3(-2, 24, 38);
 camera.position.copy(startPos);
 
-const lookAt = new THREE.Vector3(14, -8, -18);
+const lookAt = new THREE.Vector3(12, -5, -20);
 camera.lookAt(lookAt);
 
 const renderer = new THREE.WebGLRenderer({
@@ -29,7 +29,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.95;
+renderer.toneMappingExposure = 1.15;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 

@@ -155,9 +155,9 @@ export async function createHeroBuilding(scene) {
 
   const concreteMat = new THREE.MeshStandardMaterial({
     map: concreteTex,
-    color: 0x1a1a2a,
-    roughness: 0.9,
-    metalness: 0.1,
+    color: 0x252535,
+    roughness: 0.85,
+    metalness: 0.15,
   });
 
   const storefrontMatCool = new THREE.MeshStandardMaterial({
@@ -173,7 +173,7 @@ export async function createHeroBuilding(scene) {
     map: storefrontTexWarm,
     emissiveMap: storefrontTexWarm,
     emissive: new THREE.Color(1, 1, 1),
-    emissiveIntensity: 1.0,
+    emissiveIntensity: 1.2,
     color: 0x080814,
     roughness: 0.8,
     metalness: 0.2,
@@ -183,7 +183,7 @@ export async function createHeroBuilding(scene) {
     map: domeTex,
     emissiveMap: domeTex,
     emissive: new THREE.Color(1, 1, 1),
-    emissiveIntensity: 0.95,
+    emissiveIntensity: 1.1,
     color: 0x0a0a18,
     roughness: 0.7,
     metalness: 0.15,

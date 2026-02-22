@@ -34,7 +34,7 @@ export function createBackgroundTowers(scene) {
     color: 0x080814,
     emissiveMap: windowTex,
     emissive: new THREE.Color(1, 1, 1),
-    emissiveIntensity: 0.65,
+    emissiveIntensity: 0.85,
     roughness: 0.9,
     metalness: 0.2,
   });
