@@ -256,6 +256,54 @@ export function createTrailer(scene) {
   candleLight.position.set(-1.8, 0.7, 2.8);
   group.add(candleLight);
 
+  // String lights under awning (catenary curve)
+  const stringLights = [];
+  const bulbGeo = new THREE.SphereGeometry(0.04, 6, 6);
+  const bulbCount = 16;
+  const startX = -5.3;
+  const endX = 2.2;
+  const wireY = 3.3;
+  const wireZ = 2.5;
+
+  const wireMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
+  for (let i = 0; i < bulbCount; i++) {
+    const t = i / (bulbCount - 1);
+    const x = startX + t * (endX - startX);
+    const sag = -Math.sin(t * Math.PI) * 0.35;
+    const y = wireY + sag;
+    const z = wireZ + Math.sin(t * Math.PI * 0.5) * 0.3;
+
+    const bulbMat = new THREE.MeshBasicMaterial({
+      color: 0xffcc66,
+      transparent: true,
+      opacity: 0.9,
+    });
+    const bulb = new THREE.Mesh(bulbGeo, bulbMat);
+    bulb.position.set(x, y, z);
+    group.add(bulb);
+
+    const light = new THREE.PointLight(0xffaa44, 0.15, 3, 2);
+    light.position.set(x, y - 0.05, z);
+    group.add(light);
+
+    stringLights.push({
+      bulb,
+      light,
+      baseIntensity: 0.1 + Math.random() * 0.1,
+      flickerSpeed: 3 + Math.random() * 5,
+      flickerPhase: Math.random() * Math.PI * 2,
+    });
+  }
+
   scene.add(group);
-  return group;
+
+  function updateStringLights(elapsed) {
+    for (const sl of stringLights) {
+      const flicker = 0.7 + 0.3 * Math.sin(elapsed * sl.flickerSpeed + sl.flickerPhase);
+      sl.light.intensity = sl.baseIntensity * flicker;
+      sl.bulb.material.opacity = 0.6 + 0.4 * flicker;
+    }
+  }
+
+  return { group, updateStringLights };
 }

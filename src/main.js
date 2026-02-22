@@ -1,27 +1,31 @@
 import * as THREE from 'three';
-import { createCity } from './scene/city.js';
+import { createCity, updateNeonFlicker } from './scene/city.js';
 import { createPlatform } from './scene/platform.js';
 import { createTrailer } from './scene/trailer.js';
 import { createVegetation } from './scene/vegetation.js';
 import { setupAtmosphere } from './scene/atmosphere.js';
 import { setupLighting } from './scene/lighting.js';
+import { createNeonSigns, setupSignInteraction } from './scene/signs.js';
+import { createEffects } from './scene/effects.js';
 import { createOverlay } from './ui/overlay.js';
 import './style.css';
 
-// Scene
 const scene = new THREE.Scene();
 
-// Camera - elevated 3/4 view looking down at the rooftop
 const camera = new THREE.PerspectiveCamera(
   52,
   window.innerWidth / window.innerHeight,
   0.1,
   500
 );
-camera.position.set(8, 7, 13);
-camera.lookAt(0, 1, -2);
 
-// Renderer
+const startPos = new THREE.Vector3(12, 9, 18);
+const endPos = new THREE.Vector3(8, 7, 13);
+camera.position.copy(startPos);
+
+const lookAt = new THREE.Vector3(0, 1, -2);
+camera.lookAt(lookAt);
+
 const renderer = new THREE.WebGLRenderer({
   antialias: true,
   powerPreference: 'default',
@@ -33,27 +37,25 @@ renderer.toneMappingExposure = 0.65;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-// Build scene
-createCity(scene);
+const { group: cityGroup, flickerStrips } = createCity(scene);
 createPlatform(scene);
-createTrailer(scene);
+const { group: trailerGroup, updateStringLights } = createTrailer(scene);
 const vegetation = createVegetation(scene);
 const { composer, rainUpdate } = setupAtmosphere(scene, camera, renderer);
 setupLighting(scene);
+const signs = createNeonSigns(scene);
+const signInteraction = setupSignInteraction(camera, signs, renderer);
+const effects = createEffects(scene);
 createOverlay();
 
-// Mouse parallax (smooth)
 let targetMX = 0, targetMY = 0;
 let currentMX = 0, currentMY = 0;
-const baseCamPos = camera.position.clone();
-const lookAt = new THREE.Vector3(0, 1, -2);
 
 document.addEventListener('mousemove', (e) => {
   targetMX = (e.clientX / window.innerWidth - 0.5) * 2;
   targetMY = (e.clientY / window.innerHeight - 0.5) * 2;
 });
 
-// Touch parallax for mobile
 document.addEventListener('touchmove', (e) => {
   if (e.touches.length > 0) {
     targetMX = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
@@ -61,7 +63,6 @@ document.addEventListener('touchmove', (e) => {
   }
 }, { passive: true });
 
-// Vegetation sway
 function updateVegetation(elapsed) {
   for (const sprite of vegetation.children) {
     const ud = sprite.userData;
@@ -71,8 +72,12 @@ function updateVegetation(elapsed) {
   }
 }
 
-// Render loop
 const clock = new THREE.Clock();
+const INTRO_DURATION = 3.0;
+
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
 
 function animate() {
   requestAnimationFrame(animate);
@@ -80,32 +85,45 @@ function animate() {
   const delta = clock.getDelta();
   const elapsed = clock.getElapsedTime();
 
-  // Smooth camera follow
-  currentMX += (targetMX - currentMX) * 0.04;
-  currentMY += (targetMY - currentMY) * 0.04;
+  // Entrance zoom
+  if (elapsed < INTRO_DURATION) {
+    const t = easeOutCubic(elapsed / INTRO_DURATION);
+    camera.position.lerpVectors(startPos, endPos, t);
+  } else {
+    // Smooth mouse parallax + breathe drift
+    currentMX += (targetMX - currentMX) * 0.04;
+    currentMY += (targetMY - currentMY) * 0.04;
 
-  camera.position.x = baseCamPos.x + currentMX * 0.6;
-  camera.position.y = baseCamPos.y - currentMY * 0.35;
+    const breatheX = Math.sin(elapsed * 0.8) * 0.08;
+    const breatheY = Math.cos(elapsed * 0.5) * 0.05;
+
+    camera.position.x = endPos.x + currentMX * 0.6 + breatheX;
+    camera.position.y = endPos.y - currentMY * 0.35 + breatheY;
+    camera.position.z = endPos.z;
+  }
+
   camera.lookAt(lookAt);
 
-  rainUpdate(delta);
+  rainUpdate(delta, elapsed);
   updateVegetation(elapsed);
+  updateNeonFlicker(flickerStrips, elapsed);
+  updateStringLights(elapsed);
+  effects.update(elapsed, delta);
+  signInteraction.update();
 
   composer.render();
 }
 
 animate();
 
-// Fade out loading screen
 const loadingEl = document.getElementById('loading');
 if (loadingEl) {
   setTimeout(() => {
     loadingEl.classList.add('fade-out');
-    setTimeout(() => loadingEl.remove(), 1200);
-  }, 600);
+    setTimeout(() => loadingEl.remove(), 2000);
+  }, 800);
 }
 
-// Resize handler
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
