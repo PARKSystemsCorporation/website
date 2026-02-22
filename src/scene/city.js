@@ -76,19 +76,19 @@ export function createCity(scene) {
     }
 
     const tierRoll = Math.random();
-    let dist, baseH, maxH;
+    let dist, topY, maxH;
 
     if (tierRoll < 0.3) {
       dist = 20 + Math.random() * 18;
-      baseH = 12 + Math.random() * 20;
+      topY = -3 + Math.random() * 8;
       maxH = 30 + Math.pow(Math.random(), 0.5) * 50;
     } else if (tierRoll < 0.7) {
       dist = 40 + Math.random() * 25;
-      baseH = 6 + Math.random() * 12;
+      topY = -5 + Math.random() * 7;
       maxH = 18 + Math.pow(Math.random(), 0.6) * 35;
     } else {
       dist = 68 + Math.random() * 52;
-      baseH = 3 + Math.random() * 8;
+      topY = -8 + Math.random() * 8;
       maxH = 10 + Math.pow(Math.random(), 0.7) * 25;
     }
 
@@ -98,7 +98,7 @@ export function createCity(scene) {
 
     dummy.position.set(
       Math.sin(angle) * dist + (Math.random() - 0.5) * 6,
-      baseH + h / 2,
+      topY - h / 2,
       -Math.cos(angle) * dist
     );
     dummy.scale.set(w, h, d);
@@ -155,7 +155,7 @@ function addNeonStrips(group) {
 
     strip.position.set(
       Math.sin(angle) * dist + (Math.random() - 0.5) * 5,
-      8 + Math.random() * 40,
+      -15 + Math.random() * 20,
       -Math.cos(angle) * dist
     );
     strip.rotation.y = angle + Math.PI;
