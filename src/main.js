@@ -32,16 +32,24 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
+renderer.toneMappingExposure = 0.85;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
 const { group: cityGroup, flickerStrips } = createCity(scene);
-createPlatform(scene);
-const { group: trailerGroup, updateStringLights } = createTrailer(scene);
-const vegetation = createVegetation(scene);
+
+// Parent group for cabin compound — rotate 90deg without moving camera
+const cabinPivot = new THREE.Group();
+scene.add(cabinPivot);
+
+createPlatform(cabinPivot);
+const { group: trailerGroup, updateStringLights } = createTrailer(cabinPivot);
+const vegetation = createVegetation(cabinPivot);
+
+cabinPivot.rotation.y = Math.PI / 2;
+
 const { composer, rainUpdate } = setupAtmosphere(scene, camera, renderer);
-setupLighting(scene);
+setupLighting(scene, cabinPivot);
 const effects = createEffects(scene);
 createOverlay();
 
