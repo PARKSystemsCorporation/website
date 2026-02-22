@@ -66,11 +66,11 @@ export function createCity(scene) {
   const color = new THREE.Color();
 
   for (let i = 0; i < count; i++) {
-    const rightBias = Math.random() < 0.7;
+    const leftBias = Math.random() < 0.7;
 
     let angle;
-    if (rightBias) {
-      angle = -0.2 + Math.random() * 1.1;
+    if (leftBias) {
+      angle = -(0.2 + Math.random() * 1.1);
     } else {
       angle = -1.2 + Math.random() * 2.4;
     }
@@ -144,10 +144,10 @@ function addNeonStrips(group) {
 
     const strip = new THREE.Mesh(geo, mat);
 
-    const rightBias = Math.random() < 0.75;
+    const leftBias = Math.random() < 0.75;
     let angle;
-    if (rightBias) {
-      angle = -0.1 + Math.random() * 0.9;
+    if (leftBias) {
+      angle = -(0.1 + Math.random() * 0.9);
     } else {
       angle = -1.0 + Math.random() * 2.0;
     }

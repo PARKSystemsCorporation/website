@@ -159,6 +159,33 @@ export function createPlatform(scene) {
   hPipe2.rotation.x = Math.PI / 2;
   group.add(hPipe2);
 
+  // Fairytale hill mound under the platform
+  const hillMat = new THREE.MeshStandardMaterial({
+    color: 0x1a2a15,
+    roughness: 0.95,
+    metalness: 0.0,
+  });
+
+  const hillGeo = new THREE.SphereGeometry(14, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+  const hill = new THREE.Mesh(hillGeo, hillMat);
+  hill.position.set(0, -0.15, 0);
+  hill.scale.set(1.2, 0.6, 1.0);
+  group.add(hill);
+
+  // Smaller secondary mound for organic shape
+  const hill2Geo = new THREE.SphereGeometry(8, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+  const hill2 = new THREE.Mesh(hill2Geo, hillMat.clone());
+  hill2.material.color.setHex(0x152210);
+  hill2.position.set(-5, -0.15, 3);
+  hill2.scale.set(1.0, 0.5, 0.8);
+  group.add(hill2);
+
+  const hill3 = new THREE.Mesh(hill2Geo, hillMat.clone());
+  hill3.material.color.setHex(0x1d2e18);
+  hill3.position.set(4, -0.15, -2);
+  hill3.scale.set(0.8, 0.45, 0.9);
+  group.add(hill3);
+
   scene.add(group);
   return group;
 }
